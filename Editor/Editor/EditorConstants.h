@@ -1,9 +1,0 @@
-#ifndef EDITORCONSTANTS_H
-#define EDITORCONSTANTS_H
-
-#define DEBUG_ICON_WIDTH  20
-#define CODE_FOLDING_ICON_WIDTH  15
-#define LINE_NUMBER_COLOR   Qt::darkGray
-#define LINE_NUMBER_BACKGROUND  Qt::lightGray
-
-#endif // EDITORCONSTANTS_H
