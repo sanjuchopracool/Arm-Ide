@@ -2,7 +2,7 @@
 
 struct HighLightingRule
 {
-    QString pattern;
+    QRegExp pattern;
     QTextCharFormat format;
 };
 
@@ -19,17 +19,25 @@ struct CSyntaxHighLighterData
      *char format for all kind of situations
      */
     QTextCharFormat multipleLineCommentFormat;
+    QTextCharFormat singleLineCommentFormat;
 };
 
 
 
 CSyntaxHighLighterData::CSyntaxHighLighterData()
 {
+    HighLightingRule rule;
     commentStartExpression = QRegExp("/\\*");
     commentEndExpression = QRegExp("\\*/");
 
     multipleLineCommentFormat.setForeground(MULTILINE_COMMENT_FORMAT);
     multipleLineCommentFormat.setFontItalic(true);
+
+    singleLineCommentFormat.setForeground(SINGLE_LINE_COMMENT_FORMAT);
+    singleLineCommentFormat.setFontItalic(true);
+    rule.pattern = QRegExp("//[^\n]*");
+    rule.format = singleLineCommentFormat;
+    highLightingRules.append(rule);
 }
 
 CSyntaxHighLighter::CSyntaxHighLighter(QTextDocument *parent) :
@@ -40,6 +48,18 @@ CSyntaxHighLighter::CSyntaxHighLighter(QTextDocument *parent) :
 
 void CSyntaxHighLighter::highlightBlock(const QString& text)
 {
+    foreach(const HighLightingRule& rule, d->highLightingRules)
+    {
+        QRegExp regExp(rule.pattern);
+        int index = regExp.indexIn(text);
+        while(index >= 0)
+        {
+            int length = regExp.matchedLength();
+            setFormat(index,length,rule.format);
+            index = regExp.indexIn(text, index + length);
+        }
+    }
+
     setCurrentBlockState(0);
     int startIndex = 0;
     if(previousBlockState() != 1)

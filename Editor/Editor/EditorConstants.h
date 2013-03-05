@@ -9,4 +9,5 @@
 // syntax highlight Colors
 
 #define MULTILINE_COMMENT_FORMAT     Qt::blue
+#define SINGLE_LINE_COMMENT_FORMAT     Qt::gray
 #endif // EDITORCONSTANTS_H
