@@ -20,6 +20,7 @@ struct CSyntaxHighLighterData
      */
     QTextCharFormat multipleLineCommentFormat;
     QTextCharFormat singleLineCommentFormat;
+    QTextCharFormat macroFormat;
 };
 
 
@@ -37,6 +38,11 @@ CSyntaxHighLighterData::CSyntaxHighLighterData()
     singleLineCommentFormat.setFontItalic(true);
     rule.pattern = QRegExp("//[^\n]*");
     rule.format = singleLineCommentFormat;
+    highLightingRules.append(rule);
+
+    macroFormat.setForeground(MACRO_FORMAT);
+    rule.pattern = QRegExp("#[^\n]*");
+    rule.format = macroFormat;
     highLightingRules.append(rule);
 }
 
