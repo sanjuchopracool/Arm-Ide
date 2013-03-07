@@ -12,3 +12,9 @@ SOURCES += \
     Editor.cpp \
     main.cpp \
     CSyntaxHighLighter.cpp
+
+OTHER_FILES += \
+    CCompleterWords.txt
+
+RESOURCES += \
+    Edtior.qrc

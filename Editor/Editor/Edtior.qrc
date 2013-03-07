@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/Completer">
+        <file>CCompleterWords.txt</file>
+    </qresource>
+</RCC>

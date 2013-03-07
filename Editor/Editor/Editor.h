@@ -3,6 +3,8 @@
 #include "EditorConstants.h"
 #include "CSyntaxHighLighter.h"
 #include <QPlainTextEdit>
+#include <QCompleter>
+
 class Editor;
 
 /**************************************************************************
@@ -43,14 +45,23 @@ public:
     Editor(QWidget *parent = 0);
     void leftSideAreaPaintEvent(QPaintEvent* event);
     int lineNumberAreaWidth();
+
+    void setCompleter(QCompleter* c);
+    QCompleter* completer() const;
+    QString textUnderCursor() const;
+    QAbstractItemModel* modelFromFile(const QString& fileName);
     
 signals:
     
 public slots:
     void updateLeftAreaWidth(int);
     void updateLeftSideArea(const QRect& rect, int dy);
+    void insertCompletion(const QString& completion);
+
 protected:
     void resizeEvent(QResizeEvent *e);
+    void focusInEvent(QFocusEvent *e);
+    void keyPressEvent(QKeyEvent *e);
 private:
     EditorData* d;
     
