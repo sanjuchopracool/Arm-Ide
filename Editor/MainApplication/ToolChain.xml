@@ -1,0 +1,5 @@
+<!DOCTYPE ToolChain>
+<tools>
+ <Compiler name="arm-elf"/>
+ <Make name="make"/>
+</tools>
