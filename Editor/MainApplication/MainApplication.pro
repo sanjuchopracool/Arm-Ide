@@ -15,12 +15,20 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     FirstTimeSetupDialog.cpp \
-    ToolChainHelpDialog.cpp
+    ToolChainHelpDialog.cpp \
+    ProjectData.cpp \
+    LinkerConfigDialog.cpp \
+    GeneralPlainTextDialog.cpp
 
 HEADERS  += mainwindow.h \
     FirstTimeSetupDialog.h \
-    ToolChainHelpDialog.h
+    ToolChainHelpDialog.h \
+    ProjectData.h \
+    LinkerConfigDialog.h \
+    GeneralPlainTextDialog.h
 
 FORMS += \
     FirstTimeSetupDialog.ui \
-    ToolChainHelpDialog.ui
+    ToolChainHelpDialog.ui \
+    LinkerConfigDialog.ui \
+    GeneralPlainTextDialog.ui

@@ -14,6 +14,7 @@ public:
 private slots:
     void newProject();
     void changeToolChain();
+    void changeLinkerSetting();
 
 private:
 
@@ -22,8 +23,9 @@ private:
     void createMenus();
     ////////////////////////////////////////////////
 
-    QMenu* fileMenu;
-    QMenu* settingMenu;
+    QMenu* m_fileMenu;
+    QMenu* m_projectMenu;
+    QMenu* m_settingMenu;
 
     QAction* m_newProjectAction;
     QAction* m_openProjectAction;
@@ -40,6 +42,8 @@ private:
     QAction* m_quitAction;
 
 
+    //project Actions
+    QAction* m_linkerSettingAction;
     //setting Actions
     QAction* m_toolChainAction;
 
