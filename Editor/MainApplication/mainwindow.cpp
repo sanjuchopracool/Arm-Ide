@@ -10,6 +10,7 @@
 #include "FirstTimeSetupDialog.h"
 #include <QDomDocument>
 #include "LinkerConfigDialog.h"
+#include "StartUp.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -78,6 +79,9 @@ void MainWindow::createActions()
     m_toolChainAction = new QAction(tr("Change &toolchain"),this);
     connect(m_toolChainAction,SIGNAL(triggered()),this,SLOT(changeToolChain()));
 
+    m_startUpCodeAction = new QAction(tr("StartUp Co&de"),this);
+    connect(m_startUpCodeAction,SIGNAL(triggered()),this,SLOT(changeStartUpCode()));
+
 }
 
 void MainWindow::createMenus()
@@ -90,6 +94,7 @@ void MainWindow::createMenus()
 
     m_projectMenu = menuBar()->addMenu("&Project");
     m_projectMenu->addAction(m_linkerSettingAction);
+    m_projectMenu->addAction(m_startUpCodeAction);
 
     m_settingMenu = menuBar()->addMenu("&Setting");
     m_settingMenu->addAction(m_toolChainAction);
@@ -105,4 +110,10 @@ void MainWindow::changeLinkerSetting()
 {
     LinkerConfigDialog linkerDialog(this);
     linkerDialog.exec();
+}
+
+void MainWindow::changeStartUpCode()
+{
+    StartUp startUpCodeDialog(this);
+    startUpCodeDialog.exec();
 }

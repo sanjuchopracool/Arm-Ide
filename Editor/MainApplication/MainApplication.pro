@@ -18,17 +18,23 @@ SOURCES += main.cpp\
     ToolChainHelpDialog.cpp \
     ProjectData.cpp \
     LinkerConfigDialog.cpp \
-    GeneralPlainTextDialog.cpp
+    GeneralPlainTextDialog.cpp \
+    StartUp.cpp
 
 HEADERS  += mainwindow.h \
     FirstTimeSetupDialog.h \
     ToolChainHelpDialog.h \
     ProjectData.h \
     LinkerConfigDialog.h \
-    GeneralPlainTextDialog.h
+    GeneralPlainTextDialog.h \
+    StartUp.h
 
 FORMS += \
     FirstTimeSetupDialog.ui \
     ToolChainHelpDialog.ui \
     LinkerConfigDialog.ui \
-    GeneralPlainTextDialog.ui
+    GeneralPlainTextDialog.ui \
+    StartUp.ui
+
+RESOURCES += \
+    StartUp.qrc

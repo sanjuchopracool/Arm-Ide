@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/startup">
+        <file>start1.S</file>
+        <file>start3.S</file>
+        <file>start5.S</file>
+    </qresource>
+</RCC>
