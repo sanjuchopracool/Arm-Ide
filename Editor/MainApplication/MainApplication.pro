@@ -34,7 +34,8 @@ FORMS += \
     ToolChainHelpDialog.ui \
     LinkerConfigDialog.ui \
     GeneralPlainTextDialog.ui \
-    StartUp.ui
+    StartUp.ui \
+    ProjectSettingDialog.ui
 
 RESOURCES += \
     StartUp.qrc
