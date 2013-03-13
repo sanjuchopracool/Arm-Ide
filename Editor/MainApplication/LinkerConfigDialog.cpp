@@ -81,7 +81,7 @@ void LinkerConfigDialog::generateLinkerFile()
     {
         if(!QDir::current().mkdir(linkerDirName))
         {
-            QMessageBox::warning(this,tr("Failed to generate Linker file"),
+            QMessageBox::warning(this,tr("Failed to generate Linker directory"),
                                  tr("Failed to create linker directory\n"
                                     "please check permissions"));
         }

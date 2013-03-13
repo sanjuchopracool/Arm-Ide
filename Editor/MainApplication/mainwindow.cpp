@@ -11,6 +11,8 @@
 #include <QDomDocument>
 #include "LinkerConfigDialog.h"
 #include "StartUp.h"
+#include <QFileDialog>
+#include "NewProject.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,7 +33,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::newProject()
 {
-    qDebug() << "Create a new Project";
+    NewProject projectDialog(this);
+    projectDialog.exec();
 }
 
 void MainWindow::checkExternalTools()

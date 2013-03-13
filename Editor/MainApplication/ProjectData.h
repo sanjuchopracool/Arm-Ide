@@ -3,7 +3,7 @@
 #include <QString>
 #include <QStringList>
 #include <QObject>
-
+#include <QDir>
 
 /*
  * We will create a xml file which will contain all the setting
@@ -24,6 +24,8 @@ class ProjectData : public QObject
 public:
     ProjectData();
 
+    QString projectName;
+    QString fullProjectPath;
     QStringList sources;
     QStringList headers;
     QString linkerFile;
@@ -33,5 +35,24 @@ public:
     QStringList assemblerFlags;
 
 };
+
+struct softwareDefaults
+{
+    softwareDefaults() : defaultProjectDirectory(QDir::homePath()){}
+    QString defaultProjectDirectory;
+};
+
+static softwareDefaults  defaultSofwareSetting;
+static ProjectData    projectSetting;
+
+static softwareDefaults* defaultSoftwareSetting()
+{
+    return &defaultSofwareSetting;
+}
+
+static ProjectData* ProjectSetting()
+{
+    return &projectSetting;
+}
 
 #endif // PROJECTDATA_H

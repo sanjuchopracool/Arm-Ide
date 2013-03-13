@@ -16,10 +16,12 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     FirstTimeSetupDialog.cpp \
     ToolChainHelpDialog.cpp \
-    ProjectData.cpp \
     LinkerConfigDialog.cpp \
     GeneralPlainTextDialog.cpp \
-    StartUp.cpp
+    StartUp.cpp \
+    NewProject.cpp \
+    ProjectData.cpp \
+    ProjectSettingDialog.cpp
 
 HEADERS  += mainwindow.h \
     FirstTimeSetupDialog.h \
@@ -27,7 +29,9 @@ HEADERS  += mainwindow.h \
     ProjectData.h \
     LinkerConfigDialog.h \
     GeneralPlainTextDialog.h \
-    StartUp.h
+    StartUp.h \
+    NewProject.h \
+    ProjectSettingDialog.h
 
 FORMS += \
     FirstTimeSetupDialog.ui \
@@ -35,7 +39,8 @@ FORMS += \
     LinkerConfigDialog.ui \
     GeneralPlainTextDialog.ui \
     StartUp.ui \
-    ProjectSettingDialog.ui
+    ProjectSettingDialog.ui \
+    NewProject.ui
 
 RESOURCES += \
     StartUp.qrc
