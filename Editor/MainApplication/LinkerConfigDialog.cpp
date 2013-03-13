@@ -60,9 +60,9 @@ LinkerConfigDialog::LinkerConfigDialog(QWidget *parent) :
     //icons related things
     ui->pbHelp->setIcon(this->style()->standardIcon(QStyle::SP_DialogHelpButton));
     connect(ui->cbExtraCode,SIGNAL(toggled(bool)),ui->teExtraCode,SLOT(setEnabled(bool)));
-    connect(ui->pbApply,SIGNAL(clicked()),this,SLOT(apply()));
+    connect(ui->pbApply,SIGNAL(clicked()),this,SLOT(applyChanges()));
     connect(ui->pbPreview,SIGNAL(clicked()),this,SLOT(previewLinkerFile()));
-    connect(ui->pbCancel,SIGNAL(clicked()),this,SLOT(close()));
+    connect(ui->pbNext,SIGNAL(clicked()),this,SLOT(nextSlot()));
 
     setWindowTitle(tr("Linker Setting"));
 }
@@ -150,7 +150,7 @@ void LinkerConfigDialog::linkerText(QTextStream &linkerStream)
     linkerStream << "\n}\n";
 }
 
-void LinkerConfigDialog::apply()
+void LinkerConfigDialog::applyChanges()
 {
     generateLinkerFile();
     this->close();
@@ -164,4 +164,16 @@ void LinkerConfigDialog::previewLinkerFile()
     linkerText(stream);
     generalText.setText(str);
     generalText.exec();
+}
+
+/*
+ * IF linker does not exist(new Project) create it else don't modify the existing file
+ */
+
+void LinkerConfigDialog::nextSlot()
+{
+    if(QFile ("linker/ROM.ld").exists())
+        close();
+    else
+        applyChanges();
 }

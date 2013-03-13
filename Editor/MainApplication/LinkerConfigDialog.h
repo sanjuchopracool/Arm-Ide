@@ -24,8 +24,9 @@ private:
     LinkerData *d;
 
 private slots:
-    void apply();
+    void applyChanges();
     void previewLinkerFile();
+    void nextSlot();
 };
 
 #endif // LINKERCONFIGDIALOG_H

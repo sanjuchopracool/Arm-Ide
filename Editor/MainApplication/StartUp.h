@@ -17,6 +17,7 @@ signals:
 public slots:
     void applyChanges();
     void previewSlot();
+    void nextSlot();
 
 private:
     Ui::StartUp ui;

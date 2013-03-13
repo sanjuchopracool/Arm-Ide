@@ -68,7 +68,7 @@ StartUp::StartUp(QWidget *parent) :
         start5.close();
     }
 
-    connect(ui.pbCancel,SIGNAL(clicked()),this,SLOT(close()));
+    connect(ui.pbNext,SIGNAL(clicked()),this,SLOT(nextSlot()));
     connect(ui.pbApply,SIGNAL(clicked()),this,SLOT(applyChanges()));
     connect(ui.pbPreview,SIGNAL(clicked()),this,SLOT(previewSlot()));
 }
@@ -131,4 +131,16 @@ void StartUp::previewSlot()
     startUpPreviewDialog.setText(str);
     startUpPreviewDialog.setMinimumWidth(700);
     startUpPreviewDialog.exec();
+}
+
+/*
+ * IF linker does not exist(new Project) create it else don't modify the existing file
+ */
+
+void StartUp::nextSlot()
+{
+    if(QFile ("src/startup.S").exists())
+        close();
+    else
+        applyChanges();
 }
