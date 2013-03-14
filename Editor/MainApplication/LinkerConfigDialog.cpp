@@ -9,6 +9,8 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include "GeneralPlainTextDialog.h"
+#include "ProjectData.h"
+#include <QDebug>
 
 struct LinkerData
 {
@@ -75,6 +77,9 @@ LinkerConfigDialog::~LinkerConfigDialog()
 
 void LinkerConfigDialog::generateLinkerFile()
 {
+    qDebug() <<  &ProjectData::instance() << ProjectData::instance().projectName;
+    qDebug() <<  &ProjectData::instance() << ProjectData::instance().fullProjectPath;
+
     QString linkerDirName("linker");
     QDir linkerDir(linkerDirName);
     if(!linkerDir.exists())

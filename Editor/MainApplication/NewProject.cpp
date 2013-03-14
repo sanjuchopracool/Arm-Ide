@@ -71,8 +71,12 @@ void NewProject::next()
                                            QMessageBox::Yes|QMessageBox::No);
         if(answer == QMessageBox::Yes)
         {
-            ProjectSetting()->projectName = ui->leProjectName->text();
-            ProjectSetting()->fullProjectPath = ui->leProjectDirectory->text() + "/" + ui->leProjectName->text();
+            ProjectData::instance().projectName = ui->leProjectName->text();
+            ProjectData::instance().fullProjectPath = ui->leProjectDirectory->text() + "/" + ui->leProjectName->text();
+
+            qDebug() <<  &ProjectData::instance() << ProjectData::instance().projectName;
+            qDebug() <<  &ProjectData::instance() << ProjectData::instance().fullProjectPath;
+
             close();
             createProject();
         }
@@ -87,8 +91,8 @@ void NewProject::next()
     }
     else
     {
-        ProjectSetting()->projectName = ui->leProjectName->text();
-        ProjectSetting()->fullProjectPath = ui->leProjectDirectory->text() + "/" + ui->leProjectName->text();
+        ProjectData::instance().projectName = ui->leProjectName->text();
+        ProjectData::instance().fullProjectPath = ui->leProjectDirectory->text() + "/" + ui->leProjectName->text();
         close();
         createProject();
     }

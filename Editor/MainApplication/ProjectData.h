@@ -17,12 +17,13 @@
  * for debug mode the obj files will be in release.obj folder and binaries in release
  */
 
-class ProjectData : public QObject
+class ProjectData
 {
-
-    Q_OBJECT
 public:
-    ProjectData();
+    static ProjectData& instance(){
+            static ProjectData theInstance;
+            return theInstance;
+        }
 
     QString projectName;
     QString fullProjectPath;
@@ -43,16 +44,16 @@ struct softwareDefaults
 };
 
 static softwareDefaults  defaultSofwareSetting;
-static ProjectData    projectSetting;
+//static ProjectData projectSetting;
 
 static softwareDefaults* defaultSoftwareSetting()
 {
     return &defaultSofwareSetting;
 }
 
-static ProjectData* ProjectSetting()
-{
-    return &projectSetting;
-}
+//static ProjectData* ProjectSetting()
+//{
+//    return &projectSetting;
+//}
 
 #endif // PROJECTDATA_H
