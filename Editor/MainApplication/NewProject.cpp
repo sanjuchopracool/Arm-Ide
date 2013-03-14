@@ -66,17 +66,17 @@ void NewProject::next()
     if(QDir(actualProjectDirectory).exists())
     {
         QMessageBox::StandardButton answer = QMessageBox::warning(this,tr("Project directory already exist"),
-                                           tr("%1 folder already exist.\n").arg(ui->leProjectName->text()) +
-                                           tr("Do you still want to use same directory."),
-                                           QMessageBox::Yes|QMessageBox::No);
+                                                                  tr("%1 folder already exist.\n").arg(ui->leProjectName->text()) +
+                                                                  tr("Do you still want to use same directory."),
+                                                                  QMessageBox::Yes|QMessageBox::No);
         if(answer == QMessageBox::Yes)
         {
             ProjectData::instance().projectName = ui->leProjectName->text();
+#ifdef Q_OS_UNIX
             ProjectData::instance().fullProjectPath = ui->leProjectDirectory->text() + "/" + ui->leProjectName->text();
-
-            qDebug() <<  &ProjectData::instance() << ProjectData::instance().projectName;
-            qDebug() <<  &ProjectData::instance() << ProjectData::instance().fullProjectPath;
-
+#else
+            ProjectData::instance().fullProjectPath = ui->leProjectDirectory->text() + "\\" + ui->leProjectName->text();
+#endif
             close();
             createProject();
         }
@@ -92,7 +92,11 @@ void NewProject::next()
     else
     {
         ProjectData::instance().projectName = ui->leProjectName->text();
+#ifdef Q_OS_UNIX
         ProjectData::instance().fullProjectPath = ui->leProjectDirectory->text() + "/" + ui->leProjectName->text();
+#else
+        ProjectData::instance().fullProjectPath = ui->leProjectDirectory->text() + "\\" + ui->leProjectName->text();
+#endif
         close();
         createProject();
     }

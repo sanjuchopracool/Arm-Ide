@@ -6,6 +6,7 @@
 #include <QMessageBox>
 #include "GeneralPlainTextDialog.h"
 #include <QTextStream>
+#include "ProjectData.h"
 StartUp::StartUp(QWidget *parent) :
     QDialog(parent)
 {
@@ -87,7 +88,13 @@ void StartUp::prepareOtherString()
 
 void StartUp::applyChanges()
 {
-    QString srcDirName("src");
+    QString srcDirName;
+#ifdef Q_OS_UNIX
+    srcDirName = ProjectData::instance().fullProjectPath + "/src" ;
+#else
+    srcDirName = ProjectData::instance().fullProjectPath + "\\src" ;
+#endif
+
     QDir srcDir(srcDirName);
     if(!srcDir.exists())
     {
@@ -98,7 +105,12 @@ void StartUp::applyChanges()
                                     "please check permissions"));
         }
     }
-    QFile startUpFile(srcDirName +"/startup.S");
+#ifdef Q_OS_UNIX
+            QFile startUpFile(srcDirName +"/startup.S");
+#else
+            QFile startUpFile(srcDirName +"\\startup.S");
+#endif
+
     if(!startUpFile.open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
         QMessageBox::warning(this,tr("Failed to open STartup.S file"),
@@ -139,7 +151,20 @@ void StartUp::previewSlot()
 
 void StartUp::nextSlot()
 {
-    if(QFile ("src/startup.S").exists())
+    QString srcDirName;
+#ifdef Q_OS_UNIX
+    srcDirName = ProjectData::instance().fullProjectPath + "/src" ;
+#else
+    srcDirName = ProjectData::instance().fullProjectPath + "\\src" ;
+#endif
+
+#ifdef Q_OS_UNIX
+            QFile startUpFile(srcDirName +"/startup.S");
+#else
+            QFile startUpFile(srcDirName +"\\startup.S");
+#endif
+
+    if(startUpFile.exists())
         close();
     else
         applyChanges();

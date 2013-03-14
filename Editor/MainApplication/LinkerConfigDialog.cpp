@@ -77,10 +77,13 @@ LinkerConfigDialog::~LinkerConfigDialog()
 
 void LinkerConfigDialog::generateLinkerFile()
 {
-    qDebug() <<  &ProjectData::instance() << ProjectData::instance().projectName;
-    qDebug() <<  &ProjectData::instance() << ProjectData::instance().fullProjectPath;
+        QString linkerDirName;
+#ifdef Q_OS_UNIX
+        linkerDirName = ProjectData::instance().fullProjectPath + "/linker" ;
+#else
+        linkerDirName = ProjectData::instance().fullProjectPath + "\\linker" ;
+#endif
 
-    QString linkerDirName("linker");
     QDir linkerDir(linkerDirName);
     if(!linkerDir.exists())
     {
@@ -91,7 +94,11 @@ void LinkerConfigDialog::generateLinkerFile()
                                     "please check permissions"));
         }
     }
-    QFile linkerFile(linkerDirName +"/ROM.ld");
+#ifdef Q_OS_UNIX
+            QFile linkerFile(linkerDirName +"/ROM.ld");
+#else
+            QFile linkerFile(linkerDirName +"\\ROM.ld"); ;
+#endif
     if(!linkerFile.open(QIODevice::ReadWrite | QIODevice::Truncate))
     {
         QMessageBox::warning(this,tr("Failed to open Linker file"),
@@ -177,7 +184,19 @@ void LinkerConfigDialog::previewLinkerFile()
 
 void LinkerConfigDialog::nextSlot()
 {
-    if(QFile ("linker/ROM.ld").exists())
+    QString linkerDirName;
+#ifdef Q_OS_UNIX
+    linkerDirName = ProjectData::instance().fullProjectPath + "/linker" ;
+#else
+    linkerDirName = ProjectData::instance().fullProjectPath + "\\linker" ;
+#endif
+
+#ifdef Q_OS_UNIX
+            QFile linkerFile(linkerDirName +"/ROM.ld");
+#else
+            QFile linkerFile(linkerDirName +"\\ROM.ld");
+#endif
+    if(linkerFile.exists())
         close();
     else
         applyChanges();
