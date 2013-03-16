@@ -9,7 +9,9 @@
 
 struct SoftwareDefaultsData
 {
+    SoftwareDefaultsData() : defaultProjectDir(QDir::homePath()), toolChainPrefix("arm-elf") {}
     QString defaultProjectDir;   //where we will create new Project
+    QString toolChainPrefix;
 };
 
 SoftwareDefaults::SoftwareDefaults(QObject *parent) :
@@ -32,6 +34,16 @@ void SoftwareDefaults::setDefaultProjectDir(const QString& projectDir)
 QString SoftwareDefaults::defaultProjectDir() const
 {
     return d->defaultProjectDir;
+}
+
+void SoftwareDefaults::setToolChainPrefix(const QString& prefix)
+{
+    d->toolChainPrefix = prefix;
+}
+
+QString SoftwareDefaults::toolChainPrefix() const
+{
+    return d->toolChainPrefix;
 }
 
 /*
@@ -73,11 +85,18 @@ void SoftwareDefaults::save()
         return;
     }
 
-    QDomDocument setting("SoftwareDefaults");
+    QDomDocument setting("Settings");
+    QDomElement softwareDefaultsE = setting.createElement("SoftwareDefaults");
+
     QDomElement defaultProjectDirE = setting.createElement("defaultProjectDir");
-    QDomText defaultProjectDir = setting.createTextNode(d->defaultProjectDir);
-    defaultProjectDirE.appendChild(defaultProjectDir);
-    setting.appendChild(defaultProjectDirE);
+    defaultProjectDirE.setAttribute("val", d->defaultProjectDir);
+    softwareDefaultsE.appendChild(defaultProjectDirE);
+
+    QDomElement toolChainPrefixE = setting.createElement("toolChainPrefix");
+    toolChainPrefixE.setAttribute("val", d->toolChainPrefix);
+    softwareDefaultsE.appendChild(toolChainPrefixE);
+
+    setting.appendChild(softwareDefaultsE);
     QTextStream settingStream(&settingFile);
     settingStream << setting.toString();
     settingFile.close();
@@ -99,17 +118,24 @@ void SoftwareDefaults::load()
     }
     else
     {
-        QDomDocument setting("SoftwareDefaults");
+        QDomDocument setting("Settings");
         QFile settingFile(settingFileName);
         if(!setting.setContent(&settingFile))
         {
             QMessageBox::warning(0,tr("Failed to load settings!"),
-                                 tr("Failed to load settings for software.\n Failed to parse."));
+                                 tr("Failed to load settings for software.\n") + tr("Failed to parse."));
             return;
         }
 
-        QDomElement defaultProjectDirE = setting.firstChildElement("defaultProjectDir");
-        d->defaultProjectDir = defaultProjectDirE.text();
+        QDomElement SoftwareDefaultsE = setting.firstChildElement("SoftwareDefaults");
+
+        QDomElement defaultProjectDirE = SoftwareDefaultsE.firstChildElement("defaultProjectDir");
+        d->defaultProjectDir = defaultProjectDirE.attribute("val");
+
+
+        QDomElement toolChainPrefixE = SoftwareDefaultsE.firstChildElement("toolChainPrefix");
+        d->toolChainPrefix = toolChainPrefixE.attribute("val");
+
     }
 }
 

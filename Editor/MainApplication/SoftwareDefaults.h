@@ -14,6 +14,9 @@ public:
     void setDefaultProjectDir(const QString& projectDir);
     QString defaultProjectDir() const;
 
+    void setToolChainPrefix(const QString& prefix);
+    QString toolChainPrefix() const;
+
     void save();
     void load();
     

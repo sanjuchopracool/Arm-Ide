@@ -7,12 +7,19 @@
 #include <QTextEdit>
 #include <QStyle>
 #include "ToolChainHelpDialog.h"
+#include "SoftwareDefaults.h"
 
 FirstTimeSetupDialog::FirstTimeSetupDialog(QWidget *parent) :
     QDialog(parent)
 {
     ui.setupUi(this);
-    ui.leToolChainName->setText("arm-elf");
+    this->setWindowTitle(tr("Select default toolChain setting"));
+    QString toolChainPrefix = SoftwareDefaults::instance().toolChainPrefix();
+    if(toolChainPrefix.isEmpty())
+        toolChainPrefix = "arm-elf";
+
+    ui.leToolChainName->setText(toolChainPrefix);
+
     ui.leMakeName->setText("make");
     ui.pbHelp->setIcon(style()->standardIcon(QStyle::SP_DialogHelpButton));
     connect(ui.pbSkip,SIGNAL(clicked()),this,SLOT(close()));
@@ -22,37 +29,9 @@ FirstTimeSetupDialog::FirstTimeSetupDialog(QWidget *parent) :
 
 void FirstTimeSetupDialog::apply()
 {
-    QString toolChainConfigFile("ToolChain.xml");
-    QFile toolChain(toolChainConfigFile);
-    if(!toolChain.open(QIODevice::WriteOnly | QIODevice::Truncate))
-    {
-        QMessageBox::warning(this,tr("ToolChain configuration failed"),
-                             tr("Unable to open %1 in write mode.\n"
-                                "Check for user permissions.").arg(toolChainConfigFile));
-    }
-    else
-    {
-        if(ui.leToolChainName->text().isEmpty() || ui.leMakeName->text().isEmpty())
-        {
-            QMessageBox::warning(this,tr("ToolChain configuration failed"),
-                                 tr("Please enter names for compiler and make."));
-            toolChain.close();
-            return;
-        }
-        QDomDocument document("ToolChain");
-        QDomElement tools = document.createElement("tools");
-        document.appendChild(tools);
-        QDomElement toolChainE = document.createElement("Compiler");
-        toolChainE.setAttribute("name",ui.leToolChainName->text());
-        tools.appendChild(toolChainE);
-        QDomElement makeE = document.createElement("Make");
-        makeE.setAttribute("name",ui.leMakeName->text());
-        tools.appendChild(makeE);
-        QTextStream xmlStream(&toolChain);
-        xmlStream << document.toString();
-        toolChain.close();
-    }
-    close();
+    SoftwareDefaults::instance().setToolChainPrefix(ui.leToolChainName->text());
+    SoftwareDefaults::instance().modifiedSettings();
+    this->close();
 }
 
 void FirstTimeSetupDialog::help()
