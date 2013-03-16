@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     StartUp.cpp \
     NewProject.cpp \
     ProjectData.cpp \
-    ProjectSettingDialog.cpp
+    ProjectSettingDialog.cpp \
+    SoftwareDefaults.cpp
 
 HEADERS  += mainwindow.h \
     FirstTimeSetupDialog.h \
@@ -31,7 +32,8 @@ HEADERS  += mainwindow.h \
     GeneralPlainTextDialog.h \
     StartUp.h \
     NewProject.h \
-    ProjectSettingDialog.h
+    ProjectSettingDialog.h \
+    SoftwareDefaults.h
 
 FORMS += \
     FirstTimeSetupDialog.ui \

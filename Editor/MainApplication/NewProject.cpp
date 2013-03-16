@@ -7,6 +7,7 @@
 #include "ProjectSettingDialog.h"
 #include "LinkerConfigDialog.h"
 #include "StartUp.h"
+#include "SoftwareDefaults.h"
 
 NewProject::NewProject(QWidget *parent) :
     QDialog(parent),
@@ -16,7 +17,10 @@ NewProject::NewProject(QWidget *parent) :
     ui->pbNext->setEnabled(false);
     setWindowTitle(tr("New Project"));
 
-    QString directory = defaultSoftwareSetting()->defaultProjectDirectory;
+    QString directory = SoftwareDefaults::instance().defaultProjectDir();
+    if(directory.isEmpty())
+        directory = QDir::homePath();
+
     ui->leProjectDirectory->setText(directory);
     connect(ui->pbCancel,SIGNAL(clicked()),this,SLOT(close()));
     connect(ui->pbBrowse,SIGNAL(clicked()),this,SLOT(browse()));
@@ -33,7 +37,7 @@ NewProject::~NewProject()
 void NewProject::browse()
 {
     QString browsedDirectory = QFileDialog::getExistingDirectory(this,tr("Select Project Directory"),
-                                                                 QDir::homePath());
+                                                                 ui->leProjectDirectory->text());
     if(!browsedDirectory.isNull())
         ui->leProjectDirectory->setText(browsedDirectory);
 }
@@ -56,7 +60,10 @@ void NewProject::projectText()
 void NewProject::setDefaultchecked(bool val)
 {
     if(val)
-        defaultSoftwareSetting()->defaultProjectDirectory = ui->leProjectDirectory->text();
+    {
+        SoftwareDefaults::instance().setDefaultProjectDir(ui->leProjectDirectory->text());
+        SoftwareDefaults::instance().modifiedSettings();
+    }
 }
 
 void NewProject::next()

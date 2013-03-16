@@ -12,6 +12,7 @@
 #include "LinkerConfigDialog.h"
 #include "StartUp.h"
 #include <QFileDialog>
+#include "SoftwareDefaults.h"
 #include "NewProject.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -24,6 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
     // create action, menu , toolbars and other things
     createActions();
     createMenus();
+
+
+    //Read settings
+    SoftwareDefaults::instance().load();
 }
 
 MainWindow::~MainWindow()
