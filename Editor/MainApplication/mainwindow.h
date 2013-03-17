@@ -16,6 +16,7 @@ private slots:
     void changeToolChain();
     void changeLinkerSetting();
     void changeStartUpCode();
+    void changeCompilerSetting();
 
 private:
 
@@ -46,6 +47,7 @@ private:
     //project Actions
     QAction* m_linkerSettingAction;
     QAction* m_startUpCodeAction;
+    QAction* m_compilerSetting;
     //setting Actions
     QAction* m_toolChainAction;
 

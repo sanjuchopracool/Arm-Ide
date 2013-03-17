@@ -14,6 +14,7 @@
 #include <QFileDialog>
 #include "SoftwareDefaults.h"
 #include "NewProject.h"
+#include "ProjectSettingDialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -90,6 +91,9 @@ void MainWindow::createActions()
     m_startUpCodeAction = new QAction(tr("StartUp Co&de"),this);
     connect(m_startUpCodeAction,SIGNAL(triggered()),this,SLOT(changeStartUpCode()));
 
+    m_compilerSetting = new QAction(tr("&Compiler setting"),this);
+    connect(m_compilerSetting,SIGNAL(triggered()),this,SLOT(changeCompilerSetting()));
+
 }
 
 void MainWindow::createMenus()
@@ -103,6 +107,7 @@ void MainWindow::createMenus()
     m_projectMenu = menuBar()->addMenu("&Project");
     m_projectMenu->addAction(m_linkerSettingAction);
     m_projectMenu->addAction(m_startUpCodeAction);
+    m_projectMenu->addAction(m_compilerSetting);
 
     m_settingMenu = menuBar()->addMenu("&Setting");
     m_settingMenu->addAction(m_toolChainAction);
@@ -124,4 +129,10 @@ void MainWindow::changeStartUpCode()
 {
     StartUp startUpCodeDialog(this);
     startUpCodeDialog.exec();
+}
+
+void MainWindow::changeCompilerSetting()
+{
+    ProjectSettingDialog compilerSettingDialog(this);
+    compilerSettingDialog.exec();
 }

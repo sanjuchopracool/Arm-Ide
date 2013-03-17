@@ -111,12 +111,12 @@ void NewProject::next()
 
 void NewProject::createProject()
 {
-    ProjectSettingDialog projectSettingDialog(this);
+    ProjectSettingDialog projectSettingDialog(this->parentWidget());
     projectSettingDialog.exec();
 
-    LinkerConfigDialog linkerSettingDialog(this);
+    LinkerConfigDialog linkerSettingDialog(this->parentWidget());
     linkerSettingDialog.exec();
 
-    StartUp startUpSettingDialog(this);
+    StartUp startUpSettingDialog(this->parentWidget());
     startUpSettingDialog.exec();
 }

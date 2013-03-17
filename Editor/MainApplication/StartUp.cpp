@@ -11,6 +11,9 @@ StartUp::StartUp(QWidget *parent) :
     QDialog(parent)
 {
     ui.setupUi(this);
+
+    setWindowTitle(tr("Startup code settings"));
+
     ui.pbHelp->setIcon(style()->standardIcon(QStyle::SP_DialogHelpButton));
     ui.cbIRQFunctions->setChecked(true);
     ui.leUndSize->setText("0x00000008");
