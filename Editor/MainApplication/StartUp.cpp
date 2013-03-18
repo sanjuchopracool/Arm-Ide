@@ -93,9 +93,9 @@ void StartUp::applyChanges()
 {
     QString srcDirName;
 #ifdef Q_OS_UNIX
-    srcDirName = ProjectData::instance().fullProjectPath + "/src" ;
+    srcDirName = Project::instance().projectPath() + "/src" ;
 #else
-    srcDirName = ProjectData::instance().fullProjectPath + "\\src" ;
+    srcDirName = Project::instance().projectPath() + "\\src" ;
 #endif
 
     QDir srcDir(srcDirName);
@@ -156,9 +156,9 @@ void StartUp::nextSlot()
 {
     QString srcDirName;
 #ifdef Q_OS_UNIX
-    srcDirName = ProjectData::instance().fullProjectPath + "/src" ;
+    srcDirName = Project::instance().projectPath() + "/src" ;
 #else
-    srcDirName = ProjectData::instance().fullProjectPath + "\\src" ;
+    srcDirName = Project::instance().projectPath() + "\\src" ;
 #endif
 
 #ifdef Q_OS_UNIX

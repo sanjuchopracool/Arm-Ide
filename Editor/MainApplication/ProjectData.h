@@ -17,43 +17,80 @@
  * for debug mode the obj files will be in release.obj folder and binaries in release
  */
 
-class ProjectData
+struct ProjectData;
+
+class Project
 {
 public:
-    static ProjectData& instance(){
-            static ProjectData theInstance;
-            return theInstance;
-        }
+    static Project& instance();
+    Project();
 
-    QString projectName;
-    QString fullProjectPath;
-    QStringList sources;
-    QStringList headers;
-    QString linkerFile;
+    void setFullProjectPath(const QString& projectPath);
+    QString projectPath() const;
 
-    QString toolChainPrefix;
-    QStringList cFlags;
-    QStringList assemblerFlags;
+    void setProjectName(const QString& projectName);
+    QString projectName();
+
+    void setTooChainPrefix(const QString& toolChainPrefix);
+    QString toolChainPrefix() const;
+
+    void setArmCore(const QString& armCPU);
+    QString armCore() const;
+
+    void setCompilerCFlags(const QString& compilerFlags);
+    QString compilerCFlags() const;
+
+    void setAssemblerFlags(const QString& assemblerFlags);
+    QString assemblerFlags() const;
+
+    void setMakeBin(const bool& bin);
+    bool makeBin() const;
+
+    void setMakeHex(const bool& hex);
+    bool makeHex() const;
+
+    void setRomAddress(const QString& romAddress);
+    QString romAddress() const;
+
+    void setRamAddress(const QString& ramAddress);
+    QString ramAddress() const;
+
+    void setRomSize(const QString& romSize);
+    QString romSize() const;
+
+    void setRamSize(const QString& ramSize);
+    QString ramSize() const;
+
+    void addExtraCode(const bool& extraCodeFlag);
+    bool extraCodeFlag() const;
+
+    void addDebugCode(const bool& debugFlag);
+    bool debugFlag() const;
+
+    void setExtraCode(const QString& extraCode);
+    QString extraCode() const;
+
+    void setUndSize(const QString& undSize);
+    QString undSize() const;
+
+    void setIrqSize(const QString& irqSize);
+    QString irqSize() const;
+
+    void setFiqSize(const QString& fiqSize);
+    QString fiqSize() const;
+
+    void setSvcSize(const QString& svcSize);
+    QString svcSize() const;
+
+    void setAbrtSize(const QString& abrtSize);
+    QString abrtSize() const;
+
+    void setUsrSize(const QString& usrSize);
+    QString usrSize() const;
+
+private:
+    ProjectData* d;
 
 };
 
-struct softwareDefaults
-{
-    softwareDefaults() : defaultProjectDirectory(QDir::homePath()){}
-    QString defaultProjectDirectory;
-};
-
-static softwareDefaults  defaultSofwareSetting;
-//static ProjectData projectSetting;
-
-static softwareDefaults* defaultSoftwareSetting()
-{
-    return &defaultSofwareSetting;
-}
-
-//static ProjectData* ProjectSetting()
-//{
-//    return &projectSetting;
-//}
-
-#endif // PROJECTDATA_H
+#endif // Project_H

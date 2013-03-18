@@ -79,9 +79,9 @@ void LinkerConfigDialog::generateLinkerFile()
 {
         QString linkerDirName;
 #ifdef Q_OS_UNIX
-        linkerDirName = ProjectData::instance().fullProjectPath + "/linker" ;
+        linkerDirName = Project::instance().projectPath() + "/linker" ;
 #else
-        linkerDirName = ProjectData::instance().fullProjectPath + "\\linker" ;
+        linkerDirName = Project::instance().projectPath() + "\\linker" ;
 #endif
 
     QDir linkerDir(linkerDirName);
@@ -186,9 +186,9 @@ void LinkerConfigDialog::nextSlot()
 {
     QString linkerDirName;
 #ifdef Q_OS_UNIX
-    linkerDirName = ProjectData::instance().fullProjectPath + "/linker" ;
+    linkerDirName = Project::instance().projectPath() + "/linker" ;
 #else
-    linkerDirName = ProjectData::instance().fullProjectPath + "\\linker" ;
+    linkerDirName = Project::instance().projectPath() + "\\linker" ;
 #endif
 
 #ifdef Q_OS_UNIX

@@ -78,11 +78,11 @@ void NewProject::next()
                                                                   QMessageBox::Yes|QMessageBox::No);
         if(answer == QMessageBox::Yes)
         {
-            ProjectData::instance().projectName = ui->leProjectName->text();
+            Project::instance().setProjectName(ui->leProjectName->text());
 #ifdef Q_OS_UNIX
-            ProjectData::instance().fullProjectPath = ui->leProjectDirectory->text() + "/" + ui->leProjectName->text();
+            Project::instance().setFullProjectPath(ui->leProjectDirectory->text() + "/" + ui->leProjectName->text());
 #else
-            ProjectData::instance().fullProjectPath = ui->leProjectDirectory->text() + "\\" + ui->leProjectName->text();
+            Project::instance().setFullProjectPath(ui->leProjectDirectory->text() + "\\" + ui->leProjectName->text());
 #endif
             close();
             createProject();
@@ -98,11 +98,11 @@ void NewProject::next()
     }
     else
     {
-        ProjectData::instance().projectName = ui->leProjectName->text();
+        Project::instance().setProjectName(ui->leProjectName->text());
 #ifdef Q_OS_UNIX
-        ProjectData::instance().fullProjectPath = ui->leProjectDirectory->text() + "/" + ui->leProjectName->text();
+        Project::instance().setFullProjectPath(ui->leProjectDirectory->text() + "/" + ui->leProjectName->text());
 #else
-        ProjectData::instance().fullProjectPath = ui->leProjectDirectory->text() + "\\" + ui->leProjectName->text();
+        Project::instance().setFullProjectPath(ui->leProjectDirectory->text() + "\\" + ui->leProjectName->text());
 #endif
         close();
         createProject();
