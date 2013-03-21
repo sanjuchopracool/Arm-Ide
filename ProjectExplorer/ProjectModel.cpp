@@ -1,7 +1,11 @@
 #include "ProjectModel.h"
+#include <QMap>
+#include <QDebug>
+
 struct ProjectModelData
 {
     QList<Project*> projects;
+    QMap <Project*,QStandardItem*> projectsMap;
 };
 
 ProjectModel::ProjectModel(QObject *parent) :
@@ -14,6 +18,7 @@ ProjectModel::ProjectModel(QObject *parent) :
     project = new Project();
     project->setProjectName("project2.chops");
     addProject(project);
+    removeProject(project);
 }
 
 void ProjectModel::addProject(Project* project)
@@ -24,7 +29,10 @@ void ProjectModel::addProject(Project* project)
     if(d->projects.contains(project))
         return;
 
-    appendRow(modelItemForProject(project));
+    d->projects.append(project);
+    QStandardItem* projectItem = modelItemForProject(project);
+    d->projectsMap.insert(project,projectItem);
+    appendRow(projectItem);
 
 }
 
@@ -35,6 +43,13 @@ void ProjectModel::removeProject(Project* project)
 
     if(!d->projects.contains(project))
         return;
+
+    d->projects.removeAt(d->projects.indexOf(project));
+    QStandardItem* projectItem = d->projectsMap.value(project);
+    qDebug() << d->projectsMap.value(project)->data(Qt::DisplayRole).toString();
+   // removeRow(1,projectItem->index().parent());
+    d->projectsMap.remove(project);
+
 }
 
 QStandardItem* ProjectModel::modelItemForProject(Project *project)
