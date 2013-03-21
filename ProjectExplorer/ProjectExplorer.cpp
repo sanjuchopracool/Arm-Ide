@@ -6,17 +6,6 @@
 #include <QMenu>
 #include <QAction>
 
-enum FileType {
-    PROJECTFILE,
-    HEADERFILE,
-    CFILE,
-    ASSSEMBLYFILE,
-    LINKERFILE,
-    OTHERFILE,
-    FOLDER
-};
-
-
 struct ProjectExplorerData
 {
     ProjectExplorerData() {}
@@ -49,6 +38,28 @@ ProjectExplorer::ProjectExplorer(QWidget *parent) :
     d->removeAction = new QAction(tr("Remove"),this);
     d->renameAction = new QAction(tr("Rename"),this);
 
+}
+
+FileType ProjectExplorer::fileTypeFromSuffix(const QString& fileName)
+{
+    FileType fileType;
+    if(fileName.endsWith(".c") || fileName.endsWith(".C"))
+        fileType = CFILE;
+    else if(fileName.endsWith(".h") || fileName.endsWith(".H"))
+        fileType = HEADERFILE;
+    else if (fileName.endsWith(".chops"))
+        fileType = PROJECTFILE;
+    else if (fileName.endsWith(".S") || fileName.endsWith(".s"))
+        fileType = ASSSEMBLYFILE;
+    else if (fileName.endsWith(".ld"))
+        fileType = LINKERFILE;
+    else if( fileName.isEmpty() || fileName == "Headers" || fileName == "Sources" ||
+             fileName == "Linker" || fileName == "Others")
+        fileType = FOLDER;
+    else
+        fileType = OTHERFILE;
+
+    return fileType;
 }
 
 void ProjectExplorer::contextMenuEvent(QContextMenuEvent *event)
@@ -97,21 +108,8 @@ void ProjectExplorer::contextMenuEvent(QContextMenuEvent *event)
     QString projectName;
 
     QString fileName = fModel->data(index,Qt::DisplayRole).toString();
-    if(fileName.endsWith(".c") || fileName.endsWith(".C"))
-        fileType = CFILE;
-    else if(fileName.endsWith(".h") || fileName.endsWith(".H"))
-        fileType = HEADERFILE;
-    else if (fileName.endsWith(".chops"))
-        fileType = PROJECTFILE;
-    else if (fileName.endsWith(".S") || fileName.endsWith(".s"))
-        fileType = ASSSEMBLYFILE;
-    else if (fileName.endsWith(".ld"))
-        fileType = LINKERFILE;
-    else if( fileName.isEmpty() || fileName == "Headers" || fileName == "Sources" ||
-             fileName == "Linker" || fileName == "Others")
-        fileType = FOLDER;
-    else
-        fileType = OTHERFILE;
+
+    fileType = fileTypeFromSuffix(fileName);
 
     if(fileType == FOLDER)
         return;
@@ -166,4 +164,25 @@ void ProjectExplorer::contextMenuEvent(QContextMenuEvent *event)
 
 void ProjectExplorer::mouseDoubleClickEvent(QMouseEvent *event)
 {
+    QPoint pos = event->pos();
+    QModelIndex index = indexAt(pos);
+    QAbstractItemModel* fModel = model();
+
+    FileType fileType;
+    QString projectName;
+
+    QString fileName = fModel->data(index,Qt::DisplayRole).toString();
+
+    fileType = fileTypeFromSuffix(fileName);
+
+    if(fileType == FOLDER)
+        return;
+
+    if(fileType == PROJECTFILE)
+        projectName = fileName;
+    else
+        projectName = fModel->data(index.parent().parent(),Qt::DisplayRole).toString();
+
+    qDebug() << "Project Name" << projectName;
 }
+
