@@ -22,7 +22,7 @@ struct ProjectData;
 class Project
 {
 public:
-//    static Project& instance();
+    static Project& instance();
     Project();
 
     void setFullProjectPath(const QString& projectPath);

@@ -2,6 +2,10 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QDockWidget>
+
+#include "ProjectExplorer.h"
+#include "ProjectModel.h"
 
 class MainWindow : public QMainWindow
 {
@@ -23,6 +27,7 @@ private:
     void checkExternalTools();
     void createActions();
     void createMenus();
+    void createDocks();
     ////////////////////////////////////////////////
 
     QMenu* m_fileMenu;
@@ -60,6 +65,9 @@ private:
      *for objcopy  arm-elf-objcoy
      */
     QString m_toolChainPrefix;
+    QDockWidget* m_projectExplorerDock;
+    ProjectModel* m_model;
+    ProjectExplorer* m_explorer;
 };
 
 #endif // MAINWINDOW_H

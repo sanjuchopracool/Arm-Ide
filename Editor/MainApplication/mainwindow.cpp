@@ -15,6 +15,7 @@
 #include "SoftwareDefaults.h"
 #include "NewProject.h"
 #include "ProjectSettingDialog.h"
+#include <QTreeWidget>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -27,7 +28,10 @@ MainWindow::MainWindow(QWidget *parent)
     createActions();
     createMenus();
 
+    //add docks at present only the projectexplorer
+    createDocks();
 
+    setCentralWidget(new QWidget());
     //Read settings
     SoftwareDefaults::instance().load();
 }
@@ -111,6 +115,17 @@ void MainWindow::createMenus()
 
     m_settingMenu = menuBar()->addMenu("&Setting");
     m_settingMenu->addAction(m_toolChainAction);
+}
+
+void MainWindow::createDocks()
+{
+    m_projectExplorerDock = new QDockWidget(tr("Projects"),this);
+    m_projectExplorerDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
+    m_model = new ProjectModel(this);
+    m_explorer = new ProjectExplorer(this);
+    m_explorer->setModel(m_model);
+    m_projectExplorerDock->setWidget(m_explorer);
+    addDockWidget(Qt::LeftDockWidgetArea,m_projectExplorerDock);
 }
 
 void MainWindow::changeToolChain()

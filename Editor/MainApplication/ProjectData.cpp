@@ -42,11 +42,11 @@ struct ProjectData
 };
 
 
-//Project &Project::instance()
-//{
-//    static Project theInstance;
-//    return theInstance;
-//}
+Project &Project::instance()
+{
+    static Project theInstance;
+    return theInstance;
+}
 
 Project::Project()
 {

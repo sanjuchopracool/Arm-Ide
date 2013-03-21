@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/folder.png</file>
+        <file>images/header.png</file>
+        <file>images/project.png</file>
+        <file>images/source.png</file>
+        <file>images/assembly.png</file>
+        <file>images/linker.png</file>
+        <file>images/text.png</file>
+    </qresource>
+</RCC>

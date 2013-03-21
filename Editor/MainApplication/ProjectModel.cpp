@@ -12,19 +12,25 @@ ProjectModel::ProjectModel(QObject *parent) :
     QStandardItemModel(parent)
 {
     d = new ProjectModelData;
-    Project* project = new Project();
-    project->setProjectName("project1.chops");
-    addProject(project);
-    addFileToProject(project,"Chops.c");
-    addFileToProject(project,"Chops.S");
-    addFileToProject(project,"Chops.txt");
-    addFileToProject(project,"Chops.h");
-    removeFileFromProject(project,"Chops.c");
-//    removeFileFromProject(project,"Chops.txt");
-    project = new Project();
-    project->setProjectName("project2.chops");
-    addProject(project);
-    addFileToProject(project,"Chops.txt");
+//    Project* project = new Project();
+//    project->setProjectName("project1.chops");
+//    addProject(project);
+//    addFileToProject(project,"Chops.c");
+//    addFileToProject(project,"Chops.S");
+//    addFileToProject(project,"Chops.txt");
+//    addFileToProject(project,"Chops.h");
+//    removeFileFromProject(project,"Chops.c");
+////    removeFileFromProject(project,"Chops.txt");
+//    project = new Project();
+//    project->setProjectName("project2.chops");
+//    addProject(project);
+//    addFileToProject(project,"Chops.txt");
+}
+
+ProjectModel &ProjectModel::instance()
+{
+    static ProjectModel theInstance;
+    return theInstance;
 }
 
 void ProjectModel::addProject(Project* project)
