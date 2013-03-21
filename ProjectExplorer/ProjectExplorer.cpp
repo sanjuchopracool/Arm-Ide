@@ -25,6 +25,8 @@ struct ProjectExplorerData
 ProjectExplorer::ProjectExplorer(QWidget *parent) :
     QTreeView(parent)
 {
+    //hide headers
+    setHeaderHidden(true);
     d = new ProjectExplorerData();
     d->setAsActiveAction = new QAction(tr("Set as active project"),this);
     d->makeFileAction = new QAction(tr("Generate Makefile"),this);
@@ -43,9 +45,9 @@ ProjectExplorer::ProjectExplorer(QWidget *parent) :
 FileType ProjectExplorer::fileTypeFromSuffix(const QString& fileName)
 {
     FileType fileType;
-    if(fileName.endsWith(".c") || fileName.endsWith(".C"))
+    if(fileName.endsWith(".c"))
         fileType = CFILE;
-    else if(fileName.endsWith(".h") || fileName.endsWith(".H"))
+    else if(fileName.endsWith(".h"))
         fileType = HEADERFILE;
     else if (fileName.endsWith(".chops"))
         fileType = PROJECTFILE;

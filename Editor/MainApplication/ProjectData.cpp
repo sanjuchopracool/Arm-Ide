@@ -2,6 +2,13 @@
 
 struct ProjectData
 {
+    ProjectData()
+    {
+        sources << "source1.c" << "source2.c" << "startup.S";
+        headers << "header.h" << "header2.h";
+        projectName = "project.chops";
+    }
+
     QString projectName;
     QString fullProjectPath;
     QStringList sources;
@@ -35,11 +42,11 @@ struct ProjectData
 };
 
 
-Project &Project::instance()
-{
-    static Project theInstance;
-    return theInstance;
-}
+//Project &Project::instance()
+//{
+//    static Project theInstance;
+//    return theInstance;
+//}
 
 Project::Project()
 {
@@ -254,4 +261,51 @@ void Project::setUsrSize(const QString& usrSize)
 QString Project::usrSize() const
 {
     return d->usrSize;
+}
+
+const QStringList Project::sources() const
+{
+    return d->sources;
+}
+
+void Project::addSourceFile(const QString &fileName)
+{
+    if(fileName.isEmpty())
+        return;
+
+    if(!d->sources.contains(fileName))
+        d->sources.append(fileName);
+
+}
+
+void Project::removeSourceFile(const QString &fileName)
+{
+    if(fileName.isEmpty())
+        return;
+
+    if(d->sources.contains(fileName))
+        d->sources.removeAt(d->sources.indexOf(fileName));
+}
+
+const QStringList Project::headers() const
+{
+    return d->headers;
+}
+
+void Project::addHeaderFile(const QString &fileName)
+{
+    if(fileName.isEmpty())
+        return;
+
+    if(!d->headers.contains(fileName))
+        d->headers.append(fileName);
+}
+
+void Project::removeHeaderFile(const QString &fileName)
+{
+    if(fileName.isEmpty())
+        return;
+
+    if(d->headers.contains(fileName))
+        d->headers.removeAt(d->headers.indexOf(fileName));
 }

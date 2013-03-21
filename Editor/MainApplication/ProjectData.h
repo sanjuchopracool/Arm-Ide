@@ -22,7 +22,7 @@ struct ProjectData;
 class Project
 {
 public:
-    static Project& instance();
+//    static Project& instance();
     Project();
 
     void setFullProjectPath(const QString& projectPath);
@@ -87,6 +87,15 @@ public:
 
     void setUsrSize(const QString& usrSize);
     QString usrSize() const;
+
+    //files related functions
+    const QStringList sources() const;
+    void addSourceFile(const QString& fileName);
+    void removeSourceFile(const QString& fileName);
+
+    const QStringList headers() const;
+    void addHeaderFile(const QString& fileName);
+    void removeHeaderFile(const QString& fileName);
 
 private:
     ProjectData* d;

@@ -13,7 +13,17 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    ProjectExplorer.cpp
+    ProjectExplorer.cpp \
+    ProjectModel.cpp \
+    ../Editor/MainApplication/ProjectData.cpp
 
 HEADERS  += \
-    ProjectExplorer.h
+    ProjectExplorer.h \
+    ProjectModel.h \
+    ../Editor/MainApplication/ProjectData.h
+
+OTHER_FILES += \
+    as.txt
+
+RESOURCES += \
+    ProjectExplorer.qrc
