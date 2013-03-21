@@ -15,10 +15,16 @@ ProjectModel::ProjectModel(QObject *parent) :
     Project* project = new Project();
     project->setProjectName("project1.chops");
     addProject(project);
+    addFileToProject(project,"Chops.c");
+    addFileToProject(project,"Chops.S");
+    addFileToProject(project,"Chops.txt");
+    addFileToProject(project,"Chops.h");
+    removeFileFromProject(project,"Chops.c");
+    removeFileFromProject(project,"Chops.txt");
     project = new Project();
     project->setProjectName("project2.chops");
     addProject(project);
-    removeProject(project);
+    addFileToProject(project,"Chops.txt");
 }
 
 void ProjectModel::addProject(Project* project)
@@ -46,8 +52,7 @@ void ProjectModel::removeProject(Project* project)
 
     d->projects.removeAt(d->projects.indexOf(project));
     QStandardItem* projectItem = d->projectsMap.value(project);
-    qDebug() << d->projectsMap.value(project)->data(Qt::DisplayRole).toString();
-   // removeRow(1,projectItem->index().parent());
+    removeRow(projectItem->row(),projectItem->index().parent());
     d->projectsMap.remove(project);
 
 }
@@ -87,6 +92,114 @@ QList<QStandardItem *> ProjectModel::modelItemsForStringList(const QStringList& 
         itemList << modelItem;
     }
     return itemList;
+}
+
+void ProjectModel::addFileToProject(Project *project, const QString &fileName)
+{
+    if(!project)
+        return;
+
+    if(fileName.isEmpty())
+        return;
+
+    FileType type;
+    QStandardItem* newFileItem;
+    QStandardItem* projectItem = d->projectsMap.value(project);
+    if(fileName.endsWith(".c"))
+    {
+        type = CFILE;
+        newFileItem = new QStandardItem(QIcon(":/images/source.png"),fileName);
+    }
+    else if (fileName.endsWith(".h"))
+    {
+        type = HEADERFILE;
+        newFileItem = new QStandardItem(QIcon(":/images/header.png"),fileName);
+    }
+    else if(fileName.endsWith(".S") || fileName.endsWith(".s"))
+    {
+        type = ASSSEMBLYFILE;
+        newFileItem = new QStandardItem(QIcon(":/images/assembly.png"),fileName);
+    }
+    else
+    {
+        type = OTHERFILE;
+        newFileItem = new QStandardItem(QIcon(":/images/text.png"),fileName);
+    }
+
+    QStandardItem* folder;
+
+    switch (type)
+    {
+    case CFILE:
+    case ASSSEMBLYFILE:
+        folder = projectItem->child(1);
+        break;
+    case HEADERFILE:
+        folder = projectItem->child(0);
+        break;
+    case OTHERFILE:
+        folder = projectItem->child(3);
+        if(!folder)
+        {
+            folder = new QStandardItem(QIcon(":/images/folder.png"),"Others");
+            projectItem->appendRow(folder);
+            folder = projectItem->child(3);
+        }
+        break;
+    default:
+        break;
+    }
+
+    folder->appendRow(newFileItem);
+}
+
+void ProjectModel::removeFileFromProject(Project *project, const QString &fileName)
+{
+    if(!project)
+        return;
+
+    if(fileName.isEmpty())
+        return;
+
+    FileType type;
+    QStandardItem* projectItem = d->projectsMap.value(project);
+    if(fileName.endsWith(".c"))
+        type = CFILE;
+    else if (fileName.endsWith(".h"))
+        type = HEADERFILE;
+    else if(fileName.endsWith(".S") || fileName.endsWith(".s"))
+        type = ASSSEMBLYFILE;
+    else
+        type = OTHERFILE;
+
+    QStandardItem* folder;
+
+    switch (type)
+    {
+    case CFILE:
+    case ASSSEMBLYFILE:
+        folder = projectItem->child(1);
+        break;
+    case HEADERFILE:
+        folder = projectItem->child(0);
+        break;
+    case OTHERFILE:
+        folder = projectItem->child(3);
+        break;
+    default:
+        break;
+    }
+
+    int childrenCount = folder->rowCount();
+    for(int i = 0; i < childrenCount; i++)
+        if(folder->child(i)->data(Qt::DisplayRole).toString() == fileName)
+        {
+            folder->removeRow(i);
+            break;
+        }
+
+    if(!folder->rowCount())
+        removeRow(folder->row(), folder->parent()->index());
 }
 
 

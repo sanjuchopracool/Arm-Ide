@@ -17,6 +17,9 @@ public:
     QStandardItem* modelItemForProject(Project* project);
     QList<QStandardItem*> modelItemsForStringList(const QStringList& list);
 
+    void addFileToProject(Project* project,const QString& fileName);
+    void removeFileFromProject(Project* project,const QString& fileName);
+
     
 signals:
     
