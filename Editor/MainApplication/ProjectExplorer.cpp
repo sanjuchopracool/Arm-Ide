@@ -64,11 +64,11 @@ FileType ProjectExplorer::fileTypeFromSuffix(const QString& fileName)
     return fileType;
 }
 
-ProjectExplorer &ProjectExplorer::instance()
-{
-    static ProjectExplorer theInstance;
-    return theInstance;
-}
+//ProjectExplorer &ProjectExplorer::instance()
+//{
+//    static ProjectExplorer theInstance;
+//    return theInstance;
+//}
 
 void ProjectExplorer::contextMenuEvent(QContextMenuEvent *event)
 {

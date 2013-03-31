@@ -22,7 +22,6 @@ struct ProjectData;
 class Project
 {
 public:
-    static Project& instance();
     Project();
 
     void setFullProjectPath(const QString& projectPath);
@@ -87,6 +86,9 @@ public:
 
     void setUsrSize(const QString& usrSize);
     QString usrSize() const;
+
+    void addIRQFunctions(bool irqFunctionFlag);
+    bool useIrqFunctions() const;
 
     //files related functions
     const QStringList sources() const;

@@ -9,12 +9,13 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include "GeneralPlainTextDialog.h"
-#include "ProjectData.h"
+#include "mainwindow.h"
+
 #include <QDebug>
 
 struct LinkerData
 {
-    LinkerData() :romOrigin("0x00000000"),ramOrigin("0x40000000"),
+    LinkerData() :romOrigin("0x00000000"),ramOrigin("0x40000000"),project(0),
         ramSize(32),romSize(512),debug(false),useExtraSectionCode(false) {}
 
     QString romOrigin;
@@ -24,13 +25,15 @@ struct LinkerData
     int romSize;
     bool debug;
     bool useExtraSectionCode;
+    Project* project;
 };
 
-LinkerConfigDialog::LinkerConfigDialog(QWidget *parent) :
+LinkerConfigDialog::LinkerConfigDialog(QWidget *parent, Project* project) :
     QDialog(parent),
     ui(new Ui::LinkerConfigDialog)
 {
     d = new LinkerData;
+    d->project = project;
     QIntValidator* intValidator = new QIntValidator;
     intValidator->setRange(0,std::numeric_limits<int>::max());
     ui->setupUi(this);
@@ -77,11 +80,14 @@ LinkerConfigDialog::~LinkerConfigDialog()
 
 void LinkerConfigDialog::generateLinkerFile()
 {
+    if(!d->project)
+        return;
+
         QString linkerDirName;
 #ifdef Q_OS_UNIX
-        linkerDirName = Project::instance().projectPath() + "/linker" ;
+        linkerDirName = d->project->projectPath() + "/linker" ;
 #else
-        linkerDirName = Project::instance().projectPath() + "\\linker" ;
+        linkerDirName = d->project->projectPath() + "\\linker" ;
 #endif
 
     QDir linkerDir(linkerDirName);
@@ -162,8 +168,28 @@ void LinkerConfigDialog::linkerText(QTextStream &linkerStream)
     linkerStream << "\n}\n";
 }
 
+void LinkerConfigDialog::updateProjectSetting()
+{
+
+    d->project->setRamAddress(ui->leRamOrigin->text());
+    d->project->setRomAddress(ui->leRomOrigin->text());
+    d->project->setRamSize(ui->leRamSize->text());
+    d->project->setRomSize(ui->leRomSize->text());
+    d->project->addDebugCode(ui->cbDebug->isChecked());
+    d->project->addExtraCode(ui->cbExtraCode->isChecked());
+
+    if(ui->cbExtraCode->isChecked())
+        d->project->setExtraCode(ui->teExtraCode->toPlainText());
+    else
+        d->project->setExtraCode(QString());
+}
+
 void LinkerConfigDialog::applyChanges()
 {
+    if(!d->project)
+        return;
+
+    updateProjectSetting();
     generateLinkerFile();
     this->close();
 }
@@ -184,11 +210,16 @@ void LinkerConfigDialog::previewLinkerFile()
 
 void LinkerConfigDialog::nextSlot()
 {
+    if(!d->project)
+        return;
+
+    updateProjectSetting();
+
     QString linkerDirName;
 #ifdef Q_OS_UNIX
-    linkerDirName = Project::instance().projectPath() + "/linker" ;
+    linkerDirName = d->project->projectPath() + "/linker" ;
 #else
-    linkerDirName = Project::instance().projectPath() + "\\linker" ;
+    linkerDirName = d->project->projectPath() + "\\linker" ;
 #endif
 
 #ifdef Q_OS_UNIX

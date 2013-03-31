@@ -27,11 +27,11 @@ ProjectModel::ProjectModel(QObject *parent) :
 //    addFileToProject(project,"Chops.txt");
 }
 
-ProjectModel &ProjectModel::instance()
-{
-    static ProjectModel theInstance;
-    return theInstance;
-}
+//ProjectModel &ProjectModel::instance()
+//{
+//    static ProjectModel theInstance;
+//    return theInstance;
+//}
 
 void ProjectModel::addProject(Project* project)
 {

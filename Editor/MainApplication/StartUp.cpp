@@ -7,11 +7,13 @@
 #include "GeneralPlainTextDialog.h"
 #include <QTextStream>
 #include "ProjectData.h"
-StartUp::StartUp(QWidget *parent) :
+#include "mainwindow.h"
+
+StartUp::StartUp(QWidget *parent, Project* project) :
     QDialog(parent)
 {
     ui.setupUi(this);
-
+    m_project = project;
     setWindowTitle(tr("Startup code settings"));
 
     ui.pbHelp->setIcon(style()->standardIcon(QStyle::SP_DialogHelpButton));
@@ -89,13 +91,30 @@ void StartUp::prepareOtherString()
     startUpCode4 = "        bl    main   \n\n";
 }
 
+void StartUp::updateProjectSetting()
+{
+
+    m_project->setUndSize(ui.leUndSize->text());
+    m_project->setIrqSize(ui.leIrqSize->text());
+    m_project->setFiqSize(ui.leFiqSize->text());
+    m_project->setSvcSize(ui.leSvcSize->text());
+    m_project->setAbrtSize(ui.leAbrtSize->text());
+    m_project->setUsrSize(ui.leUsrSize->text());
+    m_project->addIRQFunctions(ui.cbIRQFunctions->isChecked());
+}
+
 void StartUp::applyChanges()
 {
+    if(!m_project)
+        return;
+
+    updateProjectSetting();
+
     QString srcDirName;
 #ifdef Q_OS_UNIX
-    srcDirName = Project::instance().projectPath() + "/src" ;
+    srcDirName = m_project->projectPath() + "/src" ;
 #else
-    srcDirName = Project::instance().projectPath() + "\\src" ;
+    srcDirName = m_project->projectPath() + "\\src" ;
 #endif
 
     QDir srcDir(srcDirName);
@@ -114,7 +133,7 @@ void StartUp::applyChanges()
             QFile startUpFile(srcDirName +"\\startup.S");
 #endif
 
-    if(!startUpFile.open(QIODevice::ReadWrite | QIODevice::Truncate))
+    if(!startUpFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         QMessageBox::warning(this,tr("Failed to open STartup.S file"),
                              tr("Failed to open startup file in read write mode\n"
@@ -154,11 +173,16 @@ void StartUp::previewSlot()
 
 void StartUp::nextSlot()
 {
+    if(!m_project)
+        return;
+
+    updateProjectSetting();
     QString srcDirName;
+
 #ifdef Q_OS_UNIX
-    srcDirName = Project::instance().projectPath() + "/src" ;
+    srcDirName = m_project->projectPath() + "/src" ;
 #else
-    srcDirName = Project::instance().projectPath() + "\\src" ;
+    srcDirName = m_project->projectPath() + "\\src" ;
 #endif
 
 #ifdef Q_OS_UNIX

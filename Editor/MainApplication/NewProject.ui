@@ -64,6 +64,14 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>leProjectName</tabstop>
+  <tabstop>pbNext</tabstop>
+  <tabstop>pbCancel</tabstop>
+  <tabstop>leProjectDirectory</tabstop>
+  <tabstop>pbBrowse</tabstop>
+  <tabstop>checkBox</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

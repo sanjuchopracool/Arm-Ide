@@ -41,16 +41,9 @@ struct ProjectData
     bool useIRQFunctions;
 };
 
-
-Project &Project::instance()
-{
-    static Project theInstance;
-    return theInstance;
-}
-
 Project::Project()
 {
-    d = new ProjectData();
+    d = new ProjectData;
 }
 
 void Project::setFullProjectPath(const QString &projectPath)
@@ -261,6 +254,16 @@ void Project::setUsrSize(const QString& usrSize)
 QString Project::usrSize() const
 {
     return d->usrSize;
+}
+
+void Project::addIRQFunctions(bool irqFunctionFlag)
+{
+    d->useIRQFunctions = irqFunctionFlag;
+}
+
+bool Project::useIrqFunctions() const
+{
+    return d->useIRQFunctions;
 }
 
 const QStringList Project::sources() const

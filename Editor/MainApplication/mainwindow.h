@@ -15,6 +15,9 @@ public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    Project* currentProject();
+    static MainWindow& instance();
+
 private slots:
     void newProject();
     void changeToolChain();
@@ -28,6 +31,9 @@ private:
     void createActions();
     void createMenus();
     void createDocks();
+
+    void disableProjectMenu();
+    void enableProjectMenu();
     ////////////////////////////////////////////////
 
     QMenu* m_fileMenu;
@@ -68,6 +74,8 @@ private:
     QDockWidget* m_projectExplorerDock;
     ProjectModel* m_model;
     ProjectExplorer* m_explorer;
+
+    Project* m_currentProject;
 };
 
 #endif // MAINWINDOW_H

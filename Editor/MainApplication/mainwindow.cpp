@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
     // create action, menu , toolbars and other things
     createActions();
     createMenus();
+    disableProjectMenu();
 
     //add docks at present only the projectexplorer
     createDocks();
@@ -41,10 +42,34 @@ MainWindow::~MainWindow()
     
 }
 
+Project *MainWindow::currentProject()
+{
+    return m_currentProject;
+}
+
+MainWindow& MainWindow::instance()
+{
+    static MainWindow theInstance;
+    return theInstance;
+}
+
 void MainWindow::newProject()
 {
-    NewProject projectDialog(this);
+    m_currentProject = new Project();
+
+    NewProject projectDialog(this,m_currentProject);
     projectDialog.exec();
+    if(projectDialog.returnCode() == 0)
+    {
+        m_model->addProject(m_currentProject);
+        enableProjectMenu();
+    }
+    else
+    {
+        delete m_currentProject;
+        m_currentProject = 0 ;
+        disableProjectMenu();
+    }
 }
 
 void MainWindow::checkExternalTools()
@@ -119,13 +144,33 @@ void MainWindow::createMenus()
 
 void MainWindow::createDocks()
 {
+//    setCorner( Qt::TopLeftCorner, Qt::LeftDockWidgetArea );
+//    setCorner( Qt::TopRightCorner, Qt::RightDockWidgetArea );
+//    setCorner( Qt::BottomLeftCorner, Qt::LeftDockWidgetArea );
+//    setCorner( Qt::BottomRightCorner, Qt::RightDockWidgetArea );
+    setDockOptions(QMainWindow::ForceTabbedDocks | QMainWindow::VerticalTabs);
+
     m_projectExplorerDock = new QDockWidget(tr("Projects"),this);
     m_projectExplorerDock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     m_model = new ProjectModel(this);
     m_explorer = new ProjectExplorer(this);
     m_explorer->setModel(m_model);
     m_projectExplorerDock->setWidget(m_explorer);
+
+//    QDockWidget* dock2 = new QDockWidget("Dock 2" , this);
+//    dock2->setWidget(new QWidget());
     addDockWidget(Qt::LeftDockWidgetArea,m_projectExplorerDock);
+    //    tabifyDockWidget(m_projectExplorerDock,dock2);
+}
+
+void MainWindow::disableProjectMenu()
+{
+    m_projectMenu->setEnabled(false);
+}
+
+void MainWindow::enableProjectMenu()
+{
+    m_projectMenu->setEnabled(true);
 }
 
 void MainWindow::changeToolChain()
@@ -136,18 +181,18 @@ void MainWindow::changeToolChain()
 
 void MainWindow::changeLinkerSetting()
 {
-    LinkerConfigDialog linkerDialog(this);
+    LinkerConfigDialog linkerDialog(this, m_currentProject);
     linkerDialog.exec();
 }
 
 void MainWindow::changeStartUpCode()
 {
-    StartUp startUpCodeDialog(this);
+    StartUp startUpCodeDialog(this, m_currentProject);
     startUpCodeDialog.exec();
 }
 
 void MainWindow::changeCompilerSetting()
 {
-    ProjectSettingDialog compilerSettingDialog(this);
+    ProjectSettingDialog compilerSettingDialog(this, m_currentProject);
     compilerSettingDialog.exec();
 }

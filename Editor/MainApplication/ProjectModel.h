@@ -10,7 +10,7 @@ class ProjectModel : public QStandardItemModel
     Q_OBJECT
 public:
     ProjectModel(QObject *parent = 0);
-    static ProjectModel& instance();
+//    static ProjectModel& instance();
     void addProject(Project* project);
     void removeProject(Project* project);
 

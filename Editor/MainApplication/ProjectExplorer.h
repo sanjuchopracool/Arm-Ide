@@ -22,7 +22,7 @@ class ProjectExplorer : public QTreeView
 public:
     ProjectExplorer(QWidget *parent = 0);
     FileType fileTypeFromSuffix(const QString& fileName);
-    static ProjectExplorer& instance();
+ //   static ProjectExplorer& instance();
 
 signals:
 
