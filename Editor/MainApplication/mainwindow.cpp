@@ -16,7 +16,6 @@
 #include "NewProject.h"
 #include "ProjectSettingDialog.h"
 #include <QTreeWidget>
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -72,6 +71,40 @@ void MainWindow::newProject()
     }
 }
 
+void MainWindow::openProject()
+{
+    QString projectFileName = QFileDialog::getOpenFileName(this, tr("Choose existing project"),
+                                                           SoftwareDefaults::instance().defaultProjectDir(),
+                                                           tr("Arm Project (*.chops)"));
+
+    if(projectFileName.isEmpty())
+        return;
+
+    QDomDocument projectXml("chops");
+    QFile projectFile(projectFileName);
+    if(!projectFile.open(QIODevice::ReadOnly))
+        qDebug() << "Failed to open project file in read only mode";
+
+    QString xmlString = projectFile.readAll();
+
+    projectFile.close();
+
+    if(xmlString.isEmpty())
+        return;
+
+    if(!projectXml.setContent(xmlString))
+        qDebug() << "Unable to parse xml file";
+
+    m_currentProject = new Project();
+
+    QDomElement projectE = projectXml.firstChildElement("project");
+    m_currentProject->load(projectXml, projectE);
+
+    m_model->addProject(m_currentProject);
+    enableProjectMenu();
+
+}
+
 void MainWindow::checkExternalTools()
 {
     QFile toolChainFile("ToolChain.xml");
@@ -102,6 +135,12 @@ void MainWindow::createActions()
     m_newProjectAction->setStatusTip("Create a new Project");
     connect(m_newProjectAction,SIGNAL(triggered()),this,SLOT(newProject()));
 
+    m_openProjectAction = new QAction(style()->standardIcon(QStyle::SP_DialogOpenButton),
+                                      QString(tr("&Open project")),this);
+    m_openProjectAction->setShortcuts(QKeySequence::Open);
+    connect(m_openProjectAction, SIGNAL(triggered()), this, SLOT(openProject()));
+
+
 
     //quit Action
     m_quitAction = new QAction(tr("E&xit"),this);
@@ -129,6 +168,7 @@ void MainWindow::createMenus()
 {
     m_fileMenu = menuBar()->addMenu("&File");
     m_fileMenu->addAction(m_newProjectAction);
+    m_fileMenu->addAction(m_openProjectAction);
     m_fileMenu->addSeparator();
     m_fileMenu->addAction(m_quitAction);
 

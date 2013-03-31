@@ -20,6 +20,7 @@ public:
 
 private slots:
     void newProject();
+    void openProject();
     void changeToolChain();
     void changeLinkerSetting();
     void changeStartUpCode();

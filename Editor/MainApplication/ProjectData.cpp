@@ -1,4 +1,5 @@
 #include "ProjectData.h"
+#include <QDebug>
 
 struct ProjectData
 {
@@ -281,6 +282,11 @@ void Project::addSourceFile(const QString &fileName)
 
 }
 
+void Project::addSourceFiles(const QStringList &fileList)
+{
+    d->headers = fileList;
+}
+
 void Project::removeSourceFile(const QString &fileName)
 {
     if(fileName.isEmpty())
@@ -304,6 +310,11 @@ void Project::addHeaderFile(const QString &fileName)
         d->headers.append(fileName);
 }
 
+void Project::addHeaderFiles(const QStringList &fileList)
+{
+    d->sources = fileList;
+}
+
 void Project::removeHeaderFile(const QString &fileName)
 {
     if(fileName.isEmpty())
@@ -311,4 +322,183 @@ void Project::removeHeaderFile(const QString &fileName)
 
     if(d->headers.contains(fileName))
         d->headers.removeAt(d->headers.indexOf(fileName));
+}
+
+void Project::save(QDomDocument& doc)
+{
+    QDomElement projectE = doc.createElement("project");
+    doc.appendChild(projectE);
+
+    QDomElement projectNameE = doc.createElement("projectName");
+    projectNameE.appendChild(doc.createTextNode(projectName()));
+    projectE.appendChild(projectNameE);
+
+    QDomElement projectPathE = doc.createElement("projectPath");
+    projectPathE.appendChild(doc.createTextNode(projectPath()));
+    projectE.appendChild(projectPathE);
+
+    QDomElement toolChainE = doc.createElement("toolChain");
+    toolChainE.appendChild(doc.createTextNode(toolChainPrefix()));
+    projectE.appendChild(toolChainE);
+
+    QDomElement armCoreE = doc.createElement("armCore");
+    armCoreE.appendChild(doc.createTextNode(armCore()));
+    projectE.appendChild(armCoreE);
+
+    QDomElement cFlagsE = doc.createElement("cFlags");
+    cFlagsE.appendChild(doc.createTextNode(compilerCFlags()));
+    projectE.appendChild(cFlagsE);
+
+    QDomElement assemblerFlagsE = doc.createElement("assemblerFlags");
+    assemblerFlagsE.appendChild(doc.createTextNode(assemblerFlags()));
+    projectE.appendChild(assemblerFlagsE);
+
+    QDomElement makeBinE = doc.createElement("makeBin");
+    makeBinE.appendChild(doc.createTextNode(QString::number((int)makeBin())));
+    projectE.appendChild(makeBinE);
+
+    QDomElement makeHexE = doc.createElement("makeHex");
+    makeHexE.appendChild(doc.createTextNode(QString::number((int)makeHex())));
+    projectE.appendChild(makeHexE);
+
+    QDomElement romAddressE = doc.createElement("romAddress");
+    romAddressE.appendChild(doc.createTextNode(romAddress()));
+    projectE.appendChild(romAddressE);
+
+    QDomElement ramAddressE = doc.createElement("ramAddress");
+    ramAddressE.appendChild(doc.createTextNode(ramAddress()));
+    projectE.appendChild(ramAddressE);
+
+    QDomElement romSizeE = doc.createElement("romSize");
+    romSizeE.appendChild(doc.createTextNode(romSize()));
+    projectE.appendChild(romSizeE);
+
+    QDomElement ramSizeE = doc.createElement("ramSize");
+    ramSizeE.appendChild(doc.createTextNode(ramSize()));
+    projectE.appendChild(ramSizeE);
+
+    QDomElement extraCodeE = doc.createElement("extraCodeFlag");
+    extraCodeE.appendChild(doc.createTextNode(QString::number((int)extraCodeFlag())));
+    projectE.appendChild(extraCodeE);
+
+    QDomElement debugFlagE = doc.createElement("debugFlag");
+    debugFlagE.appendChild(doc.createTextNode(QString::number((int)debugFlag())));
+    projectE.appendChild(debugFlagE);
+
+    QDomElement extraCodeTextE = doc.createElement("extraCode");
+    extraCodeTextE.appendChild(doc.createTextNode(extraCode()));
+    projectE.appendChild(extraCodeTextE);
+
+    QDomElement undSizeE = doc.createElement("undSize");
+    undSizeE.appendChild(doc.createTextNode(undSize()));
+    projectE.appendChild(undSizeE);
+
+    QDomElement irqSizeE = doc.createElement("irqSize");
+    irqSizeE.appendChild(doc.createTextNode(irqSize()));
+    projectE.appendChild(irqSizeE);
+
+    QDomElement fiqSizeE = doc.createElement("fiqSize");
+    fiqSizeE.appendChild(doc.createTextNode(fiqSize()));
+    projectE.appendChild(fiqSizeE);
+
+    QDomElement svcSizeE = doc.createElement("svcSize");
+    svcSizeE.appendChild(doc.createTextNode(svcSize()));
+    projectE.appendChild(svcSizeE);
+
+    QDomElement abrtSizeE = doc.createElement("abrtSize");
+    abrtSizeE.appendChild(doc.createTextNode(abrtSize()));
+    projectE.appendChild(abrtSizeE);
+
+    QDomElement usrSizeE = doc.createElement("usrSize");
+    usrSizeE.appendChild(doc.createTextNode(usrSize()));
+    projectE.appendChild(usrSizeE);
+
+    QDomElement irqFunctionE = doc.createElement("UseIRQFunction");
+    irqFunctionE.appendChild(doc.createTextNode(QString::number((int)useIrqFunctions())));
+    projectE.appendChild(irqFunctionE);
+
+    QDomElement sourcesE = doc.createElement("sources");
+    sourcesE.appendChild(doc.createTextNode(sources().join(" ")));
+    projectE.appendChild(sourcesE);
+
+    QDomElement headersE = doc.createElement("headers");
+    headersE.appendChild(doc.createTextNode(headers().join(" ")));
+    projectE.appendChild(headersE);
+}
+
+void Project::load(QDomDocument &doc, QDomElement projectE)
+{
+    QDomElement projectNameE = projectE.firstChildElement("projectName");
+    setProjectName(projectNameE.text());
+
+    QDomElement projectPathE = projectE.firstChildElement("projectPath");
+    setFullProjectPath(projectPathE.text());
+
+    QDomElement toolChainE = projectE.firstChildElement("toolChain");
+    setTooChainPrefix(toolChainE.text());
+
+    QDomElement armCoreE = projectE.firstChildElement("armCore");
+    setArmCore(armCoreE.text());
+
+    QDomElement cFlagsE = projectE.firstChildElement("cFlags");
+    setCompilerCFlags(cFlagsE.text());
+
+    QDomElement assemblerFlagsE = projectE.firstChildElement("assemblerFlags");
+    setAssemblerFlags(assemblerFlagsE.text());
+
+    QDomElement makeBinE = projectE.firstChildElement("makeBin");
+    setMakeBin(makeBinE.text().toInt() ? true : false);
+
+    QDomElement makeHexE = projectE.firstChildElement("makeHex");
+    setMakeHex(makeHexE.text().toInt() ? true : false);
+
+    QDomElement romAddressE = projectE.firstChildElement("romAddress");
+    setRomAddress(romAddressE.text());
+
+    QDomElement ramAddressE = projectE.firstChildElement("ramAddress");
+    setRamAddress(ramAddressE.text());
+
+    QDomElement romSizeE = projectE.firstChildElement("romSize");
+    setRomSize(romSizeE.text());
+
+    QDomElement ramSizeE = projectE.firstChildElement("ramSize");
+    setRomSize(ramSizeE.text());
+
+    QDomElement extraCodeE = projectE.firstChildElement("extraCodeFlag");
+    addExtraCode(extraCodeE.text().toInt() ? true : false);
+
+    QDomElement debugFlagE = projectE.firstChildElement("debugFlag");
+    addDebugCode(debugFlagE.text().toInt() ? true : false);
+
+    QDomElement extraCodeTextE = projectE.firstChildElement("extraCode");
+    setExtraCode(extraCodeTextE.text());
+
+    QDomElement undSizeE = projectE.firstChildElement("undSize");
+    setUndSize(undSizeE.text());
+
+    QDomElement irqSizeE = projectE.firstChildElement("irqSize");
+    setIrqSize(irqSizeE.text());
+
+    QDomElement fiqSizeE = projectE.firstChildElement("fiqSize");
+    setFiqSize(fiqSizeE.text());
+
+    QDomElement svcSizeE = projectE.firstChildElement("svcSize");
+    setSvcSize(svcSizeE.text());
+
+    QDomElement abrtSizeE = projectE.firstChildElement("abrtSize");
+    setAbrtSize(abrtSizeE.text());
+
+    QDomElement usrSizeE = projectE.firstChildElement("usrSize");
+    setUsrSize(usrSizeE.text());
+
+    QDomElement irqFunctionE = projectE.firstChildElement("UseIRQFunction");
+    addIRQFunctions(irqFunctionE.text().toInt() ? true : false);
+
+    QDomElement sourcesE = projectE.firstChildElement("sources");
+    QString sources = sourcesE.text();
+    addSourceFiles(sources.split(" "));
+
+    QDomElement headersE = projectE.firstChildElement("headers");
+    QString headers = headersE.text();
+    addHeaderFiles(headers.split(" "));
 }

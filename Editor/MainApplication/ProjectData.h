@@ -4,6 +4,8 @@
 #include <QStringList>
 #include <QObject>
 #include <QDir>
+#include <QDomDocument>
+#include <QDomElement>
 
 /*
  * We will create a xml file which will contain all the setting
@@ -93,11 +95,18 @@ public:
     //files related functions
     const QStringList sources() const;
     void addSourceFile(const QString& fileName);
+    void addSourceFiles(const QStringList& fileList);
     void removeSourceFile(const QString& fileName);
 
     const QStringList headers() const;
     void addHeaderFile(const QString& fileName);
+    void addHeaderFiles(const QStringList& fileList);
     void removeHeaderFile(const QString& fileName);
+
+
+    //project related file
+    void save(QDomDocument& doc);
+    void load(QDomDocument& doc, QDomElement projectE);
 
 private:
     ProjectData* d;
