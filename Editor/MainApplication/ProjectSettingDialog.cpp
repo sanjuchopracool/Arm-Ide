@@ -8,16 +8,25 @@ ProjectSettingDialog::ProjectSettingDialog(QWidget *parent, Project *project) :
     m_project = project;
     connect(ui.pbNext,SIGNAL(clicked()),this,SLOT(next()));
     connect(ui.pbApply,SIGNAL(clicked()),this,SLOT(apply()));
-
-    ui.leToolChainPrefix->setText(SoftwareDefaults::instance().toolChainPrefix());
-
     setWindowTitle(tr("Choose compiler setting"));
 
     //-mcpu=$(ARM_CPU)
-    ui.leCFlags->setText("-mthumb-interwork -ffunction-sections -Os -Wall -nostdlib");
-    ui.leAssemblerFlags->setText("-mthumb-interwork -mfpu=softfpa -Wall");
-    ui.cbBin->setChecked(true);
-    ui.cbHex->setChecked(true);
+    if(!m_project || m_project->projectName().isEmpty())
+    {
+        ui.leToolChainPrefix->setText(SoftwareDefaults::instance().toolChainPrefix());
+        ui.leCFlags->setText("-mthumb-interwork -ffunction-sections -Os -Wall -nostdlib");
+        ui.leAssemblerFlags->setText("-mthumb-interwork -mfpu=softfpa -Wall");
+        ui.cbBin->setChecked(true);
+        ui.cbHex->setChecked(true);
+    }
+    else
+    {
+        ui.leToolChainPrefix->setText(m_project->toolChainPrefix());
+        ui.leCFlags->setText(m_project->compilerCFlags());
+        ui.leAssemblerFlags->setText(m_project->assemblerFlags());
+        ui.cbBin->setChecked(m_project->makeBin());
+        ui.cbHex->setChecked(m_project->makeHex());
+    }
 }
 
 void ProjectSettingDialog::updateProjectSetting()
