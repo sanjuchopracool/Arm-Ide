@@ -17,13 +17,26 @@ StartUp::StartUp(QWidget *parent, Project* project) :
     setWindowTitle(tr("Startup code settings"));
 
     ui.pbHelp->setIcon(style()->standardIcon(QStyle::SP_DialogHelpButton));
-    ui.cbIRQFunctions->setChecked(true);
-    ui.leUndSize->setText("0x00000008");
-    ui.leFiqSize->setText("0x00000008");
-    ui.leSvcSize->setText("0x00000008");
-    ui.leAbrtSize->setText("0x00000008");
-    ui.leIrqSize->setText("0x00000080");
-    ui.leUsrSize->setText("0x00000400");
+    if(!m_project || m_project->isNewProject())
+    {
+        ui.cbIRQFunctions->setChecked(true);
+        ui.leUndSize->setText("0x00000008");
+        ui.leFiqSize->setText("0x00000008");
+        ui.leSvcSize->setText("0x00000008");
+        ui.leAbrtSize->setText("0x00000008");
+        ui.leIrqSize->setText("0x00000080");
+        ui.leUsrSize->setText("0x00000400");
+    }
+    else
+    {
+        ui.cbIRQFunctions->setChecked(m_project->useIrqFunctions());
+        ui.leUndSize->setText(m_project->undSize());
+        ui.leFiqSize->setText(m_project->fiqSize());
+        ui.leSvcSize->setText(m_project->svcSize());
+        ui.leAbrtSize->setText(m_project->abrtSize());
+        ui.leIrqSize->setText(m_project->irqSize());
+        ui.leUsrSize->setText(m_project->usrSize());
+    }
 
     QRegExp hexAddressRegExp("0{1,1}x{1,1}[0-9a-fA-F]{8,8}");
     QRegExpValidator* hexAddressValidator = new QRegExpValidator(hexAddressRegExp);

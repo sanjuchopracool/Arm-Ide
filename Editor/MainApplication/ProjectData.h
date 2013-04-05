@@ -56,10 +56,10 @@ public:
     void setRamAddress(const QString& ramAddress);
     QString ramAddress() const;
 
-    void setRomSize(const QString& romSize);
+    void setRomSize(const QString& ROMSize);
     QString romSize() const;
 
-    void setRamSize(const QString& ramSize);
+    void setRamSize(const QString& RAMSize);
     QString ramSize() const;
 
     void addExtraCode(const bool& extraCodeFlag);
@@ -107,6 +107,9 @@ public:
     //project related file
     void save(QDomDocument& doc);
     void load(QDomDocument& doc, QDomElement projectE);
+
+    void setNewProject(bool isNewProject);
+    bool isNewProject() const;
 
 private:
     ProjectData* d;

@@ -11,9 +11,10 @@ ProjectSettingDialog::ProjectSettingDialog(QWidget *parent, Project *project) :
     setWindowTitle(tr("Choose compiler setting"));
 
     //-mcpu=$(ARM_CPU)
-    if(!m_project || m_project->projectName().isEmpty())
+    if(!m_project || m_project->isNewProject())
     {
         ui.leToolChainPrefix->setText(SoftwareDefaults::instance().toolChainPrefix());
+        ui.leCpu->setText("arm7tdmi");
         ui.leCFlags->setText("-mthumb-interwork -ffunction-sections -Os -Wall -nostdlib");
         ui.leAssemblerFlags->setText("-mthumb-interwork -mfpu=softfpa -Wall");
         ui.cbBin->setChecked(true);
@@ -22,6 +23,7 @@ ProjectSettingDialog::ProjectSettingDialog(QWidget *parent, Project *project) :
     else
     {
         ui.leToolChainPrefix->setText(m_project->toolChainPrefix());
+        ui.leCpu->setText(m_project->armCore());
         ui.leCFlags->setText(m_project->compilerCFlags());
         ui.leAssemblerFlags->setText(m_project->assemblerFlags());
         ui.cbBin->setChecked(m_project->makeBin());

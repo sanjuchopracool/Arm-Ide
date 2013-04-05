@@ -15,16 +15,7 @@
 
 struct LinkerData
 {
-    LinkerData() :romOrigin("0x00000000"),ramOrigin("0x40000000"),project(0),
-        ramSize(32),romSize(512),debug(false),useExtraSectionCode(false) {}
-
-    QString romOrigin;
-    QString ramOrigin;
-    QString extraCode;
-    int ramSize;
-    int romSize;
-    bool debug;
-    bool useExtraSectionCode;
+    LinkerData() :project(0) {}
     Project* project;
 };
 
@@ -47,14 +38,29 @@ LinkerConfigDialog::LinkerConfigDialog(QWidget *parent, Project* project) :
     ui->leRamOrigin->setValidator(hexAddressValidator);
     ui->leRomOrigin->setValidator(hexAddressValidator);
 
-    //set variable in ui
-    ui->leRamOrigin->setText(d->ramOrigin);
-    ui->leRomOrigin->setText(d->romOrigin);
-    ui->leRamSize->setText(QString::number(d->ramSize));
-    ui->leRomSize->setText(QString::number(d->romSize));
-    ui->cbDebug->setChecked(d->debug);
-    ui->cbExtraCode->setChecked(d->useExtraSectionCode);
-    ui->teExtraCode->setEnabled(d->useExtraSectionCode);
+    if(!d->project || d->project->isNewProject())
+    {
+        //set variable in ui
+        ui->leRamOrigin->setText("0x40000000");
+        ui->leRomOrigin->setText("0x00000000");
+        ui->leRamSize->setText(QString::number(32));
+        ui->leRomSize->setText(QString::number(512));
+        ui->cbDebug->setChecked(false);
+        ui->cbExtraCode->setChecked(false);
+        ui->teExtraCode->setEnabled(false);
+    }
+    else
+    {
+        //set variable in ui
+        ui->leRamOrigin->setText(d->project->ramAddress());
+        ui->leRomOrigin->setText(d->project->romAddress());
+        ui->leRamSize->setText(d->project->ramSize());
+        ui->leRomSize->setText(d->project->romSize());
+        ui->cbDebug->setChecked(d->project->debugFlag());
+        ui->cbExtraCode->setChecked(d->project->extraCodeFlag());
+        ui->teExtraCode->setEnabled(ui->cbExtraCode->isChecked());
+        ui->teExtraCode->setPlainText(d->project->extraCode());
+    }
 
     //set tooltips
     ui->leRamOrigin->setToolTip("must be in hexadecimal format\n example : 0xF1234000");
@@ -177,11 +183,7 @@ void LinkerConfigDialog::updateProjectSetting()
     d->project->setRomSize(ui->leRomSize->text());
     d->project->addDebugCode(ui->cbDebug->isChecked());
     d->project->addExtraCode(ui->cbExtraCode->isChecked());
-
-    if(ui->cbExtraCode->isChecked())
-        d->project->setExtraCode(ui->teExtraCode->toPlainText());
-    else
-        d->project->setExtraCode(QString());
+    d->project->setExtraCode(ui->teExtraCode->toPlainText());
 }
 
 void LinkerConfigDialog::applyChanges()

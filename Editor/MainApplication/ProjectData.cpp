@@ -8,6 +8,7 @@ struct ProjectData
         sources << "source1.c" << "source2.c" << "startup.S";
         headers << "header.h" << "header2.h";
         projectName = "project.chops";
+        newProject = true;
     }
 
     QString projectName;
@@ -40,6 +41,9 @@ struct ProjectData
     QString abrtSize;
     QString usrSize;
     bool useIRQFunctions;
+
+    //mys custom
+    bool newProject;
 };
 
 Project::Project()
@@ -147,9 +151,9 @@ QString Project::ramAddress() const
     return d->ramOrigin;
 }
 
-void Project::setRomSize(const QString &romSize)
+void Project::setRomSize(const QString& ROMSize)
 {
-    d->romSize = romSize;
+    d->romSize = ROMSize;
 }
 
 QString Project::romSize() const
@@ -157,9 +161,9 @@ QString Project::romSize() const
     return d->romSize;
 }
 
-void Project::setRamSize(const QString &ramSize)
+void Project::setRamSize(const QString& RAMSize)
 {
-    d->ramSize = ramSize;
+    d->ramSize = RAMSize;
 }
 
 QString Project::ramSize() const
@@ -424,6 +428,8 @@ void Project::save(QDomDocument& doc)
     QDomElement headersE = doc.createElement("headers");
     headersE.appendChild(doc.createTextNode(headers().join(" ")));
     projectE.appendChild(headersE);
+
+    setNewProject(false);
 }
 
 void Project::load(QDomDocument &doc, QDomElement projectE)
@@ -460,9 +466,11 @@ void Project::load(QDomDocument &doc, QDomElement projectE)
 
     QDomElement romSizeE = projectE.firstChildElement("romSize");
     setRomSize(romSizeE.text());
+    qDebug() << romSize();
 
     QDomElement ramSizeE = projectE.firstChildElement("ramSize");
     setRomSize(ramSizeE.text());
+    qDebug() << ramSize();
 
     QDomElement extraCodeE = projectE.firstChildElement("extraCodeFlag");
     addExtraCode(extraCodeE.text().toInt() ? true : false);
@@ -501,4 +509,16 @@ void Project::load(QDomDocument &doc, QDomElement projectE)
     QDomElement headersE = projectE.firstChildElement("headers");
     QString headers = headersE.text();
     addHeaderFiles(headers.split(" "));
+
+    setNewProject(false);
+}
+
+void Project::setNewProject(bool isNewProject)
+{
+    d->newProject = isNewProject;
+}
+
+bool Project::isNewProject() const
+{
+    return d->newProject;
 }
