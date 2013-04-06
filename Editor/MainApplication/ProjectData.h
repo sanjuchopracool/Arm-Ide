@@ -6,6 +6,7 @@
 #include <QDir>
 #include <QDomDocument>
 #include <QDomElement>
+#include <QObject>
 
 /*
  * We will create a xml file which will contain all the setting
@@ -24,7 +25,7 @@ struct ProjectData;
 class Project
 {
 public:
-    Project();
+    explicit Project();
 
     void setFullProjectPath(const QString& projectPath);
     QString projectPath() const;
@@ -107,6 +108,7 @@ public:
     //project related file
     void save(QDomDocument& doc);
     void load(QDomDocument& doc, QDomElement projectE);
+    void updateProjectFile();
 
     void setNewProject(bool isNewProject);
     bool isNewProject() const;

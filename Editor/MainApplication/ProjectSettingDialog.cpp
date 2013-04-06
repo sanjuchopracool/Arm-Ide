@@ -40,6 +40,7 @@ void ProjectSettingDialog::updateProjectSetting()
     m_project->setTooChainPrefix(ui.leToolChainPrefix->text());
     m_project->setMakeBin(ui.cbBin->isChecked());
     m_project->setMakeHex(ui.cbHex->isChecked());
+    m_project->updateProjectFile();
 }
 
 void ProjectSettingDialog::next()

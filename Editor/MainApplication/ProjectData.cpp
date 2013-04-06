@@ -1,6 +1,8 @@
 #include "ProjectData.h"
 #include <QDebug>
-
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
 struct ProjectData
 {
     ProjectData()
@@ -428,8 +430,6 @@ void Project::save(QDomDocument& doc)
     QDomElement headersE = doc.createElement("headers");
     headersE.appendChild(doc.createTextNode(headers().join(" ")));
     projectE.appendChild(headersE);
-
-    setNewProject(false);
 }
 
 void Project::load(QDomDocument &doc, QDomElement projectE)
@@ -464,13 +464,13 @@ void Project::load(QDomDocument &doc, QDomElement projectE)
     QDomElement ramAddressE = projectE.firstChildElement("ramAddress");
     setRamAddress(ramAddressE.text());
 
+    QDomElement ramSizeE = projectE.firstChildElement("ramSize");
+    setRamSize(ramSizeE.text());
+    qDebug() << ramSize();
+
     QDomElement romSizeE = projectE.firstChildElement("romSize");
     setRomSize(romSizeE.text());
     qDebug() << romSize();
-
-    QDomElement ramSizeE = projectE.firstChildElement("ramSize");
-    setRomSize(ramSizeE.text());
-    qDebug() << ramSize();
 
     QDomElement extraCodeE = projectE.firstChildElement("extraCodeFlag");
     addExtraCode(extraCodeE.text().toInt() ? true : false);
@@ -511,6 +511,34 @@ void Project::load(QDomDocument &doc, QDomElement projectE)
     addHeaderFiles(headers.split(" "));
 
     setNewProject(false);
+}
+
+void Project::updateProjectFile()
+{
+    QString projectFileName = projectPath();
+
+#ifdef Q_OS_UNIX
+    projectFileName += "/" + projectName() + ".chops";
+#else
+    projectFileName += "\\" + projectName() + ".chops";
+#endif
+
+    QFile projectXmlFile(projectFileName);
+    if(!projectXmlFile.open(QIODevice::Truncate | QIODevice::WriteOnly))
+    {
+        QMessageBox::warning(0,QObject::tr("Failed to save Project!"),
+                             QObject::tr("Failed to save xml for project.\n Unable to create %.chops file.").arg(projectName()));
+        return;
+    }
+    else
+    {
+        QDomDocument doc("Chops");
+        save(doc);
+        QTextStream xmlStream(&projectXmlFile);
+        xmlStream << doc.toString();
+
+        projectXmlFile.close();
+    }
 }
 
 void Project::setNewProject(bool isNewProject)

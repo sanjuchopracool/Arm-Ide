@@ -184,6 +184,7 @@ void LinkerConfigDialog::updateProjectSetting()
     d->project->addDebugCode(ui->cbDebug->isChecked());
     d->project->addExtraCode(ui->cbExtraCode->isChecked());
     d->project->setExtraCode(ui->teExtraCode->toPlainText());
+    d->project->updateProjectFile();
 }
 
 void LinkerConfigDialog::applyChanges()

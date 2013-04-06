@@ -132,7 +132,7 @@ void NewProject::createProject()
     StartUp startUpSettingDialog(this->parentWidget(), m_project);
     startUpSettingDialog.exec();
 
-    generateProjectFile();
+    m_project->setNewProject(false);
     m_returnCode = 0;
 }
 
@@ -143,29 +143,8 @@ int NewProject::returnCode()
 
 void NewProject::generateProjectFile()
 {
-    QString projectFileName = m_project->projectPath();
-
-#ifdef Q_OS_UNIX
-    projectFileName += "/" + m_project->projectName() + ".chops";
-#else
-    projectFileName += "\\" + m_project->projectName() + ".chops";
-#endif
-
-    QFile projectXmlFile(projectFileName);
-    if(!projectXmlFile.open(QIODevice::Truncate | QIODevice::WriteOnly))
-    {
-        QMessageBox::warning(0,tr("Failed to save Project!"),
-                             tr("Failed to save xml for project.\n Unable to create %.chops file.").arg(m_project->projectName()));
+    if(!m_project)
         return;
-    }
-    else
-    {
-        QDomDocument doc("Chops");
-        m_project->save(doc);
-        QTextStream xmlStream(&projectXmlFile);
-        xmlStream << doc.toString();
 
-        projectXmlFile.close();
-    }
-
+    m_project->updateProjectFile();
 }

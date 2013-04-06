@@ -114,6 +114,7 @@ void StartUp::updateProjectSetting()
     m_project->setAbrtSize(ui.leAbrtSize->text());
     m_project->setUsrSize(ui.leUsrSize->text());
     m_project->addIRQFunctions(ui.cbIRQFunctions->isChecked());
+    m_project->updateProjectFile();
 }
 
 void StartUp::applyChanges()
