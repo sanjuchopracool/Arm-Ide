@@ -22,11 +22,11 @@
 
 struct ProjectData;
 
-class Project
+class Project :public QObject
 {
+    Q_OBJECT
 public:
-    explicit Project();
-
+    Project();
     void setFullProjectPath(const QString& projectPath);
     QString projectPath() const;
 

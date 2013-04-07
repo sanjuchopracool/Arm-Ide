@@ -12,7 +12,7 @@ struct ProjectData
         projectName = "project.chops";
         newProject = true;
     }
-
+    ~ProjectData() {}
     QString projectName;
     QString fullProjectPath;
     QStringList sources;
