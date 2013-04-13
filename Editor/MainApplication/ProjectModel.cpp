@@ -43,8 +43,11 @@ void ProjectModel::addProject(Project* project)
 
     d->projects.append(project);
     QStandardItem* projectItem = modelItemForProject(project);
-    d->projectsMap.insert(project,projectItem);
-    appendRow(projectItem);
+    if(projectItem)
+    {
+        d->projectsMap.insert(project,projectItem);
+        appendRow(projectItem);
+    }
 
 }
 
@@ -65,10 +68,11 @@ void ProjectModel::removeProject(Project* project)
 
 QStandardItem* ProjectModel::modelItemForProject(Project *project)
 {
+    QStandardItem* projectItem = 0;
     if(!project)
-        return new QStandardItem();
+        return projectItem;
 
-    QStandardItem* projectItem = new QStandardItem(QIcon(":/images/project.png"),project->projectName());
+    projectItem = new QStandardItem(QIcon(":/images/project.png"),project->projectName() + ".chops");
     QStandardItem* headers = new QStandardItem(QIcon(":/images/folder.png"),"Headers");
     headers->appendRows(modelItemsForStringList(project->headers()));
     QStandardItem* sources = new QStandardItem(QIcon(":/images/folder.png"),"Sources");
